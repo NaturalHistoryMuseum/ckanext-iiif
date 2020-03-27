@@ -1,5 +1,7 @@
 import re
+from ckan import model
 from ckan.plugins import toolkit
+from webhelpers.html import HTML
 
 from .utils import create_id_url, create_image_server_url, wrap_language
 
@@ -29,13 +31,20 @@ class IIIFRecordManifestBuilder(object):
 
     @property
     def label(self):
-        # TODO: label needs to be pulled out of the record data using a field defined by the user
-        return wrap_language(self.record[u'Barcode'])
+        return wrap_language(self.record[self.resource[u'_title_field']])
 
     @property
     def images(self):
-        # TODO: images need to be pulled out of the record data using a field defined by the user
-        return [self.record[u'Image']]
+        value = self.record[self.resource[u'_image_field']]
+        delimeter = self.resource[u'_image_delimiter']
+        return value.split(delimeter) if delimeter else [value]
+
+    @property
+    def rights(self):
+        # default the license to cc-by
+        license_id = self.resource.get(u'_image_licence', u'cc-by')
+        license = model.Package.get_license_register()[license_id]
+        return HTML.a(license.title, href=license.url)
 
     @property
     def metadata(self):
@@ -93,5 +102,6 @@ class IIIFRecordManifestBuilder(object):
             u'type': u'Manifest',
             u'label': self.label,
             u'metadata': self.metadata,
+            u'rights': self.rights,
             u'items': [self.build_canvas(image) for image in self.images],
         }
