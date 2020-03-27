@@ -2,7 +2,6 @@ import re
 from ckan import model
 from ckan.common import config
 from ckan.plugins import toolkit
-from webhelpers.html import HTML
 
 from .utils import create_id_url, create_image_server_url, wrap_language
 
@@ -45,7 +44,7 @@ class IIIFRecordManifestBuilder(object):
         # default the license to cc-by
         license_id = self.resource.get(u'_image_licence', u'cc-by')
         license = model.Package.get_license_register()[license_id]
-        return HTML.a(license.title, href=license.url)
+        return license.url
 
     @property
     def metadata(self):
