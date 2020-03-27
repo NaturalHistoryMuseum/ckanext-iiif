@@ -106,9 +106,11 @@ class IIIFRecordManifestBuilder(object):
             u'items': [self.build_canvas(image) for image in self.images],
             u'logo': [
                 {
-                    u'id': u'{}/images/nhm_logo.svg'.format(config.get(u'ckan.site_url')),
+                    u'id': u'{}/images/logo.png'.format(config.get(u'ckan.site_url')),
                     u'type': u'Image',
-                    u'format': u'image/svg+xml',
+                    u'format': u'image/png',
+                    u'width': 120,
+                    u'height': 56,
                 }
             ],
         }
