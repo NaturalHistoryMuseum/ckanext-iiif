@@ -66,7 +66,7 @@ class IIIFRecordManifestBuilder(object):
                             u'type': u'Annotation',
                             u'motivation': u'painting',
                             u'body': {
-                                u'id': u'{}/{}'.format(image_id, u'full/full/0/default.jpg'),
+                                u'id': u'{}/{}'.format(image_id, u'info.json'),
                                 u'type': u'Image',
                                 u'format': u'image/jpeg',
                                 u'service': [
