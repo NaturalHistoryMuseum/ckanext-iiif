@@ -1,5 +1,6 @@
 import re
 from ckan import model
+from ckan.common import config
 from ckan.plugins import toolkit
 from webhelpers.html import HTML
 
@@ -104,4 +105,11 @@ class IIIFRecordManifestBuilder(object):
             u'metadata': self.metadata,
             u'rights': self.rights,
             u'items': [self.build_canvas(image) for image in self.images],
+            u'logo': [
+                {
+                    u'id': u'{}/images/nhm_logo.svg'.format(config.get(u'ckan.site_url')),
+                    u'type': u'Image',
+                    u'format': u'image/svg+xml',
+                }
+            ],
         }
