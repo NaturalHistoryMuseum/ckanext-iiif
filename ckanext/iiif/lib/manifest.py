@@ -55,6 +55,7 @@ class IIIFRecordManifestBuilder(object):
 
     def build_canvas(self, image):
         canvas_id = create_id_url(u'{}/canvas/{}'.format(self.manifest_id, image))
+        # TODO: need to pass the type based on some logic (user setting/custom code)
         image_id = create_image_server_url(image)
 
         return {
