@@ -8,7 +8,7 @@ from .utils import create_id_url, create_image_server_url, wrap_language
 
 class IIIFRecordManifestBuilder(object):
     # the group names here must match the parameters for the get_builder function below
-    regex = re.compile(u'resource/(?P<resource_id>.*?)/record/(?P<record_id>.*)$')
+    regex = re.compile(u'resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$')
 
     @staticmethod
     def get_builder(resource_id, record_id):
