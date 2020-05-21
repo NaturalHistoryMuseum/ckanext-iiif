@@ -1,3 +1,5 @@
+import logging
+
 import ckan.plugins as plugins
 from ckan.plugins import toolkit
 from contextlib2 import suppress
@@ -6,6 +8,8 @@ from . import interfaces
 from . import routes
 from .lib.manifest import IIIFRecordManifestBuilder
 from .routes import iiif
+
+log = logging.getLogger(__name__)
 
 
 class IIIFPlugin(plugins.SingletonPlugin):
@@ -31,8 +35,7 @@ class IIIFPlugin(plugins.SingletonPlugin):
         for plugin in plugins.PluginImplementations(interfaces.IIIIF):
             for builder in plugin.get_builders():
                 if builder.regex in iiif.builders:
-                    raise Exception(u'Duplicate IIIF builder regex: {}'.format(
-                        builder.regex.pattern))
+                    log.warning(u'Duplicate IIIF builder regex: {}'.format(builder.regex.pattern))
                 iiif.builders[builder.regex] = builder.get_builder
 
     # IBlueprint
