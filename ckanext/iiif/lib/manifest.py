@@ -41,8 +41,11 @@ class IIIFRecordManifestBuilder(object):
 
     @property
     def rights(self):
-        # default the license to cc-by
-        license_id = self.resource.get(u'_image_licence', u'cc-by')
+        license_id = self.resource.get(u'_image_licence', None)
+        # if the license is '' or None we override it
+        if not license_id:
+            # default the license to cc-by
+            license_id = u'cc-by'
         license = model.Package.get_license_register()[license_id]
         return license.url
 
