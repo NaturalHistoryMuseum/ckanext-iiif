@@ -29,6 +29,7 @@ setup(
     namespace_packages=[u'ckanext'],
     install_requires=[
         u'six',
+        u'contextlib2>=0.6.0.post1',
     ],
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
