@@ -1,0 +1,13 @@
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+script:
+  - pip install coveralls
+  - docker-compose build
+  - docker-compose run ckan
+
+after_success: coveralls

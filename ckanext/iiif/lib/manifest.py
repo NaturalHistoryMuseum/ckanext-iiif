@@ -36,8 +36,10 @@ class IIIFRecordManifestBuilder(object):
     @property
     def images(self):
         value = self.record[self.resource[u'_image_field']]
-        delimeter = self.resource[u'_image_delimiter']
-        return value.split(delimeter) if delimeter else [value]
+        if u'_image_delimiter' in self.resource:
+            return value.split(self.resource[u'_image_delimiter'])
+        else:
+            return value if isinstance(value, list) else [value]
 
     @property
     def rights(self):
@@ -51,6 +53,7 @@ class IIIFRecordManifestBuilder(object):
 
     @property
     def metadata(self):
+        # TODO: this function does not handle lists of values well, nor nested dicts...
         return [
             {u'label': wrap_language(field), u'value': wrap_language(unicode(value))}
             for field, value in self.record.items()
