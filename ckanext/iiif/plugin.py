@@ -1,7 +1,7 @@
 import ckan.plugins as plugins
 import logging
 from ckan.plugins import toolkit
-from contextlib2 import suppress
+from contextlib import suppress
 
 from . import interfaces
 from . import routes
