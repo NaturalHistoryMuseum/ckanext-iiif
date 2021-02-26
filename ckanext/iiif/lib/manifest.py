@@ -36,8 +36,9 @@ class IIIFRecordManifestBuilder(object):
     @property
     def images(self):
         value = self.record[self.resource['_image_field']]
-        if '_image_delimiter' in self.resource:
-            return value.split(self.resource['_image_delimiter'])
+        image_delimiter = self.resource.get('_image_delimiter', None)
+        if image_delimiter:
+            return value.split(image_delimiter)
         else:
             return value if isinstance(value, list) else [value]
 

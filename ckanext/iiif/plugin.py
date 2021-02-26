@@ -53,8 +53,7 @@ class IIIFPlugin(plugins.SingletonPlugin):
                 if resource_id not in resource_cache:
                     resource_cache[resource_id] = resource_show({}, {'id': resource_id})
                 with suppress(Exception):
-                    builder = IIIFRecordManifestBuilder(resource_cache[resource_id],
-                                                        record['data'])
+                    builder = IIIFRecordManifestBuilder(resource_cache[resource_id], record['data'])
                     record['iiif'] = builder.build()
 
         return response
