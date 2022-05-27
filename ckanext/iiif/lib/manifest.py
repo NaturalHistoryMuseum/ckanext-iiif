@@ -2,11 +2,12 @@ import re
 from ckan import model
 from ckan.common import config
 from ckan.plugins import toolkit
+from typing import List
 
-from .utils import create_id_url, create_image_server_url, wrap_language
+from .utils import create_id_url, wrap_language
 
 
-class IIIFRecordManifestBuilder(object):
+class IIIFRecordManifestBuilder:
     # the group names here must match the parameters for the get_builder function below
     regex = re.compile('resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$')
 
@@ -34,13 +35,17 @@ class IIIFRecordManifestBuilder(object):
         return wrap_language(self.record[self.resource['_title_field']])
 
     @property
-    def images(self):
+    def images(self) -> List[str]:
         value = self.record[self.resource['_image_field']]
         image_delimiter = self.resource.get('_image_delimiter', None)
         if image_delimiter:
             return value.split(image_delimiter)
         else:
-            return value if isinstance(value, list) else [value]
+            images = value if isinstance(value, list) else [value]
+            if isinstance(images[0], dict):
+                return [image['identifier'] for image in images]
+            else:
+                return images
 
     @property
     def rights(self):
@@ -60,10 +65,8 @@ class IIIFRecordManifestBuilder(object):
             for field, value in self.record.items()
         ]
 
-    def build_canvas(self, image):
-        canvas_id = create_id_url(f'{self.manifest_id}/canvas/{image}')
-        # TODO: need to pass the type based on some logic (user setting/custom code)
-        image_id = create_image_server_url(image)
+    def build_canvas(self, image_number: int, image_id: str) -> dict:
+        canvas_id = create_id_url(f'{self.manifest_id}/canvas/{image_number}')
 
         return {
             'id': canvas_id,
@@ -72,7 +75,7 @@ class IIIFRecordManifestBuilder(object):
             'width': 1000,
             'height': 1000,
             # TODO: label needs to be using a field defined by the user
-            'label': wrap_language(image),
+            'label': wrap_language(image_id),
             'items': [
                 {
                     # TODO: do we need an id here?
@@ -86,14 +89,6 @@ class IIIFRecordManifestBuilder(object):
                                 'id': f'{image_id}/info.json',
                                 'type': 'Image',
                                 'format': 'image/jpeg',
-                                'service': [
-                                    {
-                                        '@context': 'http://iiif.io/api/image/3/context.json',
-                                        'id': image_id,
-                                        'type': 'ImageService3',
-                                        'profile': 'level0'
-                                    }
-                                ],
                             },
                             'target': canvas_id,
                         },
@@ -111,7 +106,7 @@ class IIIFRecordManifestBuilder(object):
             'label': self.label,
             'metadata': self.metadata,
             'rights': self.rights,
-            'items': [self.build_canvas(image) for image in self.images],
+            'items': [self.build_canvas(i, image) for i, image in enumerate(self.images)],
             'logo': [
                 {
                     'id': f'{config.get("ckan.site_url")}/images/logo.png',
