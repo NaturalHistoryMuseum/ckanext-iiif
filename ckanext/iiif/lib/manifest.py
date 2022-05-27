@@ -1,6 +1,7 @@
 import re
 from ckan import model
 from ckan.common import config
+from ckan.lib.helpers import url_for_static_or_external
 from ckan.plugins import toolkit
 from typing import List, Dict
 
@@ -123,8 +124,9 @@ class IIIFRecordManifestBuilder:
             'items': [self.build_canvas(i, image) for i, image in enumerate(self.images)],
             'logo': [
                 {
-                    'id': f'{config.get("ckan.site_url")}/images/logo.png',
+                    'id': url_for_static_or_external(config.get('ckan.site_logo')),
                     'type': 'Image',
+                    # TODO: need get these from somewhere dynamic?
                     'format': 'image/png',
                     'width': 120,
                     'height': 56,
