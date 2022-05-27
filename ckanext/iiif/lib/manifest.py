@@ -2,17 +2,20 @@ import re
 from ckan import model
 from ckan.common import config
 from ckan.plugins import toolkit
-from typing import List
+from typing import List, Dict
 
 from .utils import create_id_url, wrap_language
 
 
 class IIIFRecordManifestBuilder:
+    """
+    Builder for record level IIIF manifests.
+    """
     # the group names here must match the parameters for the get_builder function below
     regex = re.compile('resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$')
 
     @staticmethod
-    def get_builder(resource_id, record_id):
+    def get_builder(resource_id: str, record_id: int) -> 'IIIFRecordManifestBuilder':
         # this will throw an error if the resource can't be found
         resource = toolkit.get_action('resource_show')({}, {'id': resource_id})
         # this will throw an error if the record can't be found
@@ -20,18 +23,18 @@ class IIIFRecordManifestBuilder:
                                                         'record_id': record_id})
         return IIIFRecordManifestBuilder(resource, record['data'])
 
-    def __init__(self, resource, record):
+    def __init__(self, resource: dict, record: dict):
         self.resource = resource
         self.record = record
         self.resource_id = resource['id']
         self.record_id = record['_id']
 
     @property
-    def manifest_id(self):
+    def manifest_id(self) -> str:
         return f'resource/{self.resource_id}/record/{self.record_id}'
 
     @property
-    def label(self):
+    def label(self) -> Dict[str, list]:
         return wrap_language(self.record[self.resource['_title_field']])
 
     @property
@@ -48,17 +51,16 @@ class IIIFRecordManifestBuilder:
                 return images
 
     @property
-    def rights(self):
+    def rights(self) -> str:
         license_id = self.resource.get('_image_licence', None)
         # if the license is '' or None we override it
         if not license_id:
             # default the license to cc-by
             license_id = 'cc-by'
-        license = model.Package.get_license_register()[license_id]
-        return license.url
+        return model.Package.get_license_register()[license_id].url
 
     @property
-    def metadata(self):
+    def metadata(self) -> List[Dict[str, Dict[str, list]]]:
         # TODO: this function does not handle lists of values well, nor nested dicts...
         return [
             {'label': wrap_language(field), 'value': wrap_language(str(value))}
@@ -66,6 +68,13 @@ class IIIFRecordManifestBuilder:
         ]
 
     def build_canvas(self, image_number: int, image_id: str) -> dict:
+        """
+        Builds a canvas dict for the given image.
+
+        :param image_number: the image number on the record
+        :param image_id: the image URL
+        :return: the canvas definition
+        """
         canvas_id = create_id_url(f'{self.manifest_id}/canvas/{image_number}')
 
         return {
@@ -97,7 +106,12 @@ class IIIFRecordManifestBuilder:
             ]
         }
 
-    def build(self):
+    def build(self) -> dict:
+        """
+        Build the manifest.
+
+        :return: the manifest as a dict
+        """
         # TODO: add more properties
         return {
             '@context': 'http://iiif.io/api/presentation/3/context.json',
