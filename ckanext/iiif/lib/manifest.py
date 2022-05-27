@@ -34,7 +34,7 @@ class IIIFRecordManifestBuilder:
         return f'resource/{self.resource_id}/record/{self.record_id}'
 
     @property
-    def label(self) -> Dict[str, list]:
+    def label(self) -> Dict[str, List[str]]:
         return wrap_language(self.record[self.resource['_title_field']])
 
     @property
