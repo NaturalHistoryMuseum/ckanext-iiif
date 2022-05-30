@@ -3,7 +3,7 @@ from setuptools import setup, find_packages  # Always prefer setuptools over dis
 from codecs import open  # To use a consistent encoding
 from os import path
 
-__version__ = '2.0.0'
+__version__ = '2.1.0'
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
