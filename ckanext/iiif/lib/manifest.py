@@ -98,7 +98,7 @@ class IIIFRecordManifestBuilder:
                             'type': 'Annotation',
                             'motivation': 'painting',
                             'body': {
-                                'id': f'{image_id}/info.json',
+                                'id': f'{image_id}',
                                 'type': 'Image',
                             },
                             'target': canvas_id,
