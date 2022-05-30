@@ -100,7 +100,6 @@ class IIIFRecordManifestBuilder:
                             'body': {
                                 'id': f'{image_id}/info.json',
                                 'type': 'Image',
-                                'format': 'image/jpeg',
                             },
                             'target': canvas_id,
                         },
