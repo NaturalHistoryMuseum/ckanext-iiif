@@ -77,6 +77,8 @@ class IIIFRecordManifestBuilder:
         :return: the canvas definition
         """
         canvas_id = create_id_url(f'{self.manifest_id}/canvas/{image_number}')
+        annotation_page_id = f'{canvas_id}/0'
+        annotation_id = f'{annotation_page_id}/0'
 
         return {
             'id': canvas_id,
@@ -88,11 +90,11 @@ class IIIFRecordManifestBuilder:
             'label': wrap_language(image_id),
             'items': [
                 {
-                    # TODO: do we need an id here?
+                    'id': annotation_page_id,
                     'type': 'AnnotationPage',
                     'items': [
                         {
-                            # TODO: do we need an id here?
+                            'id': annotation_id,
                             'type': 'Annotation',
                             'motivation': 'painting',
                             'body': {
