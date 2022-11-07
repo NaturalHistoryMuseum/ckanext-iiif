@@ -16,7 +16,9 @@ def test_no_builders():
             with pytest.raises(Exception, match='yep'):
                 resource(MagicMock())
 
-    assert mock_toolkit.abort.call_args == call(status_code=404, detail='Unknown IIIF identifier')
+    assert mock_toolkit.abort.call_args == call(
+        status_code=404, detail='Unknown IIIF identifier'
+    )
 
 
 @pytest.mark.filterwarnings('ignore::sqlalchemy.exc.SADeprecationWarning')
@@ -24,9 +26,13 @@ def test_no_builders():
 def test_match():
     identifier = 'resource/1/record/1'
 
-    mock_get_builder = MagicMock(return_value=MagicMock(build=MagicMock(return_value={})))
+    mock_get_builder = MagicMock(
+        return_value=MagicMock(build=MagicMock(return_value={}))
+    )
     mock_builders = {
-        re.compile('resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$'): mock_get_builder
+        re.compile(
+            'resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$'
+        ): mock_get_builder
     }
 
     with patch('ckanext.iiif.routes.iiif.builders', mock_builders):

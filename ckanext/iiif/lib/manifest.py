@@ -12,6 +12,7 @@ class IIIFRecordManifestBuilder:
     """
     Builder for record level IIIF manifests.
     """
+
     # the group names here must match the parameters for the get_builder function below
     regex = re.compile('resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$')
 
@@ -20,8 +21,9 @@ class IIIFRecordManifestBuilder:
         # this will throw an error if the resource can't be found
         resource = toolkit.get_action('resource_show')({}, {'id': resource_id})
         # this will throw an error if the record can't be found
-        record = toolkit.get_action('record_show')({}, {'resource_id': resource_id,
-                                                        'record_id': record_id})
+        record = toolkit.get_action('record_show')(
+            {}, {'resource_id': resource_id, 'record_id': record_id}
+        )
         return IIIFRecordManifestBuilder(resource, record['data'])
 
     def __init__(self, resource: dict, record: dict):
@@ -103,9 +105,9 @@ class IIIFRecordManifestBuilder:
                             },
                             'target': canvas_id,
                         },
-                    ]
+                    ],
                 }
-            ]
+            ],
         }
 
     def build(self) -> dict:
@@ -122,7 +124,9 @@ class IIIFRecordManifestBuilder:
             'label': self.label,
             'metadata': self.metadata,
             'rights': self.rights,
-            'items': [self.build_canvas(i, image) for i, image in enumerate(self.images)],
+            'items': [
+                self.build_canvas(i, image) for i, image in enumerate(self.images)
+            ],
             'logo': [
                 {
                     'id': url_for_static_or_external(config.get('ckan.site_logo')),

@@ -19,6 +19,7 @@ class IIIFPlugin(plugins.SingletonPlugin):
     try:
         # hook if we can
         from ckanext.versioned_datastore.interfaces import IVersionedDatastore
+
         plugins.implements(IVersionedDatastore, inherit=True)
     except ImportError:
         pass
@@ -34,7 +35,9 @@ class IIIFPlugin(plugins.SingletonPlugin):
         for plugin in plugins.PluginImplementations(interfaces.IIIIF):
             for builder in plugin.get_builders():
                 if builder.regex in iiif.builders:
-                    log.warning('Duplicate IIIF builder regex: {}'.format(builder.regex.pattern))
+                    log.warning(
+                        'Duplicate IIIF builder regex: {}'.format(builder.regex.pattern)
+                    )
                 iiif.builders[builder.regex] = builder.get_builder
 
     # IBlueprint
@@ -51,7 +54,9 @@ class IIIFPlugin(plugins.SingletonPlugin):
             if resource_id not in resource_cache:
                 resource_cache[resource_id] = resource_show({}, {'id': resource_id})
             with suppress(Exception):
-                builder = IIIFRecordManifestBuilder(resource_cache[resource_id], record['data'])
+                builder = IIIFRecordManifestBuilder(
+                    resource_cache[resource_id], record['data']
+                )
                 record['iiif'] = builder.build()
 
         return response

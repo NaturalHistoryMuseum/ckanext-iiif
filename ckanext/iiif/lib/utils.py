@@ -14,7 +14,8 @@ def create_id_url(identifier: str) -> str:
 
 def wrap_language(value: Union[str, List[str]], language='en') -> Dict[str, List[str]]:
     """
-    Wraps the given value in the appropriate structure required by IIIF to convey language options.
+    Wraps the given value in the appropriate structure required by IIIF to convey
+    language options.
 
     :param value: the value/values
     :param language: the language, defaults to "en"
