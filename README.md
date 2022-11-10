@@ -12,7 +12,9 @@ _IIIF for CKAN_
 
 # Overview
 
-This extension enables IIIF functionality for CKAN.
+This extension enables IIIF functionality for CKAN by implementing the Presentation API.
+Currently, this includes a single manifest builder for records, but through the `IIIIF`
+interface you can extend the builders to include other IIIF resources.
 
 # Installation
 
