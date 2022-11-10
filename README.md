@@ -10,15 +10,14 @@
 
 _IIIF for CKAN_
 
-
 # Overview
 
 This extension enables IIIF functionality for CKAN.
 
-
 # Installation
 
 Path variables used below:
+
 - `$INSTALL_FOLDER` (i.e. where CKAN is installed), e.g. `/usr/lib/ckan/default`
 - `$CONFIG_FILE`, e.g. `/etc/ckan/default/development.ini`
 
@@ -61,23 +60,26 @@ There are no configuration options for this extension.
 
 # Usage
 
-
-
 # Testing
 
-There is a Docker compose configuration available in this repository to make it easier to run tests.
+There is a Docker compose configuration available in this repository to make it easier
+to run tests.
 
 To run the tests against ckan 2.9.x on Python3:
 
 1. Build the required images
+
 ```bash
 docker-compose build
 ```
 
 2. Then run the tests.
-   The root of the repository is mounted into the ckan container as a volume by the Docker compose
-   configuration, so you should only need to rebuild the ckan image if you change the extension's
+   The root of the repository is mounted into the ckan container as a volume by the
+   Docker compose
+   configuration, so you should only need to rebuild the ckan image if you change the
+   extension's
    dependencies.
+
 ```bash
 docker-compose run ckan
 ```
