@@ -1,9 +1,9 @@
 import pytest
 from ckan.tests import factories
-from ckanext.iiif.logic import actions
 from unittest.mock import patch, MagicMock, call
 
 from ckanext.iiif.builders.manifest import build_record_manifest
+from ckanext.iiif.logic import actions
 from ckanext.iiif.plugin import IIIFPlugin
 
 
@@ -106,7 +106,7 @@ class TestConfigure:
 
         class MockPlugin:
             def register_iiif_builders(self, builders):
-                builders.append("yay!")
+                builders["test"] = "yay!"
 
         plugin_implementations_mock = MagicMock(return_value=[MockPlugin()])
 
@@ -116,4 +116,4 @@ class TestConfigure:
         ):
             plugin.configure(MagicMock())
 
-        assert "yay!" in actions.BUILDERS
+        assert actions.BUILDERS["test"] == "yay!"

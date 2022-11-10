@@ -20,7 +20,7 @@ class TestBuildIIIFResource:
 
         build_iiif_resource = toolkit.get_action("build_iiif_resource")
 
-        with patch("ckanext.iiif.logic.actions.BUILDERS", [mock_builder]):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             assert build_iiif_resource({}, {"identifier": "test"}) == mock_manifest
 
     def test_no_match(self):
@@ -28,5 +28,5 @@ class TestBuildIIIFResource:
 
         build_iiif_resource = toolkit.get_action("build_iiif_resource")
 
-        with patch("ckanext.iiif.logic.actions.BUILDERS", [mock_builder]):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             assert build_iiif_resource({}, {"identifier": "test"}) is None

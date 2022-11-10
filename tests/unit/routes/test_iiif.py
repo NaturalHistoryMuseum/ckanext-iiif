@@ -16,7 +16,7 @@ class TestIIIFRoute:
         mock_manifest = {"limbs": True}
         mock_builder = MagicMock(return_value=mock_manifest)
 
-        with patch("ckanext.iiif.logic.actions.BUILDERS", [mock_builder]):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             response: Response = resource("test")
 
         assert response.content_type == "application/json"
@@ -32,7 +32,7 @@ class TestIIIFRoute:
         # get a proper 404 error when you use the Flask test client so this feels ok
         mock_abort = MagicMock(return_value=MagicMock())
 
-        with patch("ckanext.iiif.logic.actions.BUILDERS", [mock_builder]):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             with patch("ckanext.iiif.routes.iiif.toolkit.abort", mock_abort):
                 assert resource("test") is mock_abort.return_value
 

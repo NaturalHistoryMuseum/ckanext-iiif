@@ -13,7 +13,7 @@ class TestIIIFRoute:
     """
 
     def test_no_builders(self, app):
-        with patch("ckanext.iiif.logic.actions.BUILDERS", []):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {}):
             response = app.get("/iiif/dummy")
         assert response.status_code == 404
 
@@ -22,7 +22,7 @@ class TestIIIFRoute:
         mock_manifest = {"beans": 3}
         mock_builder = MagicMock(return_value=mock_manifest)
 
-        with patch("ckanext.iiif.logic.actions.BUILDERS", [mock_builder]):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             response = app.get(f"/iiif/{identifier}")
 
         assert response.status_code == 200
@@ -34,7 +34,7 @@ class TestIIIFRoute:
         identifier = "resource/1/record/1"
         mock_builder = MagicMock(return_value=None)
 
-        with patch("ckanext.iiif.logic.actions.BUILDERS", [mock_builder]):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             response = app.get(f"/iiif/{identifier}")
 
         assert response.status_code == 404

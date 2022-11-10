@@ -1,17 +1,19 @@
+from collections import OrderedDict
+
 import logging
 from ckan.plugins import toolkit
 from ckantools.decorators import action
-from typing import Optional, Callable, List
+from typing import Optional, Callable, OrderedDict as OrderedDictType
 
-from ..builders.manifest import match_and_build_record_manifest
+from ..builders.manifest import match_and_build_record_manifest, BUILDER_ID
 from ..builders.utils import IIIFBuildError
 
 log = logging.getLogger(__name__)
 
-BUILDERS: List[Callable[[str], Optional[dict]]] = [
-    # register the basic record manifest builder by default
-    match_and_build_record_manifest
-]
+BUILDERS: OrderedDictType[str, Callable[[str], Optional[dict]]] = OrderedDict()
+
+# register the basic record manifest builder by default
+BUILDERS[BUILDER_ID] = match_and_build_record_manifest
 
 build_iiif_resource_schema = {
     "identifier": [toolkit.get_validator("not_empty"), str],
@@ -37,7 +39,7 @@ def build_iiif_resource(identifier: str) -> Optional[dict]:
     :param identifier: the IIIF resource identifier
     :return: a dict or None
     """
-    for builder in BUILDERS:
+    for builder in BUILDERS.values():
         try:
             result = builder(identifier)
             if result is not None:

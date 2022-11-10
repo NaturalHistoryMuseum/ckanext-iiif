@@ -8,6 +8,8 @@ from typing import List, Dict, Optional
 
 from .utils import create_id_url, wrap_language, IIIFBuildError
 
+BUILDER_ID = "record"
+
 
 def match_and_build_record_manifest(identifier: str) -> Optional[dict]:
     """

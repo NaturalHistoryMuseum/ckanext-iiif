@@ -1,13 +1,12 @@
-from ckan.logic import NotFound
-from unittest.mock import patch, MagicMock
-
 import pytest
+from ckan.logic import NotFound
 from ckan.plugins import toolkit
 from ckan.tests import factories
-from ckanext.iiif.builders.manifest import build_record_manifest
+from unittest.mock import patch, MagicMock
 
 from ckanext.iiif.builders import manifest
-from ckanext.iiif.builders.utils import wrap_language, create_id_url, IIIFBuildError
+from ckanext.iiif.builders.manifest import build_record_manifest
+from ckanext.iiif.builders.utils import wrap_language, IIIFBuildError
 
 
 class TestBuildManifestID:
