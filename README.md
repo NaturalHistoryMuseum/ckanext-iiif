@@ -123,8 +123,10 @@ For example:
 
 ```python
 import ckan.plugins as plugins
+from typing import Optional, Callable
+from typing import OrderedDict
+
 from ckanext.iiif.interfaces import IIIIF
-from typing import Optional, Callable, List
 
 
 def my_builder(identifier: str) -> Optional[dict]:
@@ -134,8 +136,10 @@ def my_builder(identifier: str) -> Optional[dict]:
 class MyExtension(plugins.SingletonPlugin):
     plugins.implements(IIIIF)
 
-    def register_iiif_builders(self, builders: List[Callable[[str], Optional[dict]]]):
-        builders.append(my_builder)
+    def register_iiif_builders(
+        self, builders: OrderedDict[str, Callable[[str], Optional[dict]]]
+    ):
+        builders["my_builder"]: my_builder
 ```
 
 When a request is made to build a IIIF resource, each of the registered builders is
