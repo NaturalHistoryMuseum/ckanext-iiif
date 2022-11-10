@@ -1,4 +1,5 @@
 from ckan.plugins import interfaces
+from typing import Optional, Callable, List
 
 
 class IIIIF(interfaces.Interface):
@@ -6,8 +7,8 @@ class IIIIF(interfaces.Interface):
     This (horribly named) interface allows other plugins to hook into the IIIF plugin.
     """
 
-    def get_builders(self):
-        '''
-        :return: a list of classes with regex and get_builder properties
-        '''
+    def register_iiif_builders(self, builders: List[Callable[[str], Optional[dict]]]):
+        """
+        Hook for registering IIIF builders.
+        """
         pass
