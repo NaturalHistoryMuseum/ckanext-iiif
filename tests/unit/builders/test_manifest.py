@@ -215,14 +215,14 @@ class TestGetImages:
 
 
 @pytest.mark.usefixtures("clean_db")
-@patch("ckanext.iiif.builders.manifest._build_record_manifest_id")
-@patch("ckanext.iiif.builders.manifest._get_images")
-@patch("ckanext.iiif.builders.manifest.create_id_url")
-@patch("ckanext.iiif.builders.manifest._build_label")
-@patch("ckanext.iiif.builders.manifest._build_metadata")
-@patch("ckanext.iiif.builders.manifest._build_rights")
-@patch("ckanext.iiif.builders.manifest._build_canvas")
 class TestBuildRecordManifest:
+    @patch("ckanext.iiif.builders.manifest._build_record_manifest_id")
+    @patch("ckanext.iiif.builders.manifest._get_images")
+    @patch("ckanext.iiif.builders.manifest.create_id_url")
+    @patch("ckanext.iiif.builders.manifest._build_label")
+    @patch("ckanext.iiif.builders.manifest._build_metadata")
+    @patch("ckanext.iiif.builders.manifest._build_rights")
+    @patch("ckanext.iiif.builders.manifest._build_canvas")
     def test_manifest_props(
         self,
         canvas_mock,
@@ -254,6 +254,20 @@ class TestBuildRecordManifest:
         assert mani["rights"] == rights_mock.return_value
         assert mani["items"] == ["first", "second"]
         assert "logo" in mani
+
+    @patch("ckanext.iiif.builders.manifest._get_images")
+    @patch("ckanext.iiif.builders.manifest._build_canvas")
+    def test_no_images(self, canvas_mock, images_mock):
+        resource = factories.Resource()
+        record_data = {
+            "_id": 5,
+        }
+
+        images_mock.configure_mock(return_value=[])
+        canvas_mock.configure_mock(side_effect=[])
+
+        with pytest.raises(IIIFBuildError, match="No images found"):
+            build_record_manifest(resource, record_data)
 
 
 class TestMatchAndBuildRecordManifest:

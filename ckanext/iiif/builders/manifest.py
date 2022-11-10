@@ -44,7 +44,7 @@ def match_and_build_record_manifest(identifier: str) -> Optional[dict]:
     return build_record_manifest(resource, record)
 
 
-def build_record_manifest(resource: dict, record: dict) -> dict:
+def build_record_manifest(resource: dict, record: dict) -> Optional[dict]:
     """
     Given a resource and a record, build a IIIF manifest for the images held within the
     record.
@@ -52,9 +52,14 @@ def build_record_manifest(resource: dict, record: dict) -> dict:
     :param resource: the resource dict
     :param record: the record data
     :return: the IIIF manifest for the record and its images
+    :raise: IIIFBuildError if no images are present on the record
     """
     manifest_id = _build_record_manifest_id(resource, record)
+
     images = _get_images(resource, record)
+    # if there are no images, raise an exception
+    if not images:
+        raise IIIFBuildError(manifest_id, "No images found")
 
     # TODO: add more properties
     return {

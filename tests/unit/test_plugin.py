@@ -77,8 +77,13 @@ class TestDatastoreMultisearchModifyResponse:
         # what this test does
         plugin = IIIFPlugin()
 
-        resource_1 = factories.Resource()
-        record_data = {"_id": 4, "arms": "yes", "length": 15}
+        resource_1 = factories.Resource(_image_field="images")
+        record_data = {
+            "_id": 4,
+            "arms": "yes",
+            "length": 15,
+            "images": ["https://image.com/image.jpg"],
+        }
         response = {
             "records": [
                 {
