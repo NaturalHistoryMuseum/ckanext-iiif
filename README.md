@@ -62,6 +62,97 @@ There are no configuration options for this extension.
 
 # Usage
 
+This extension's main function is provide a standard endpoint and action to create IIIF
+resources.
+These IIIF resources could be based on whatever you like - a record, a resource, a whole
+dataset etc.
+
+Presentation API IIIF resources can be accessed via either the `/iiif/<identifier>`
+endpoint or the `build_iiif_resource` action where the identifier is passed in the data
+dict in the key `"identifier"`.
+When this occurs the identifier is matched against any of the registered IIIF resource
+builders and if a match is found, the resource is returned.
+
+## Record Manifest Builder
+
+By default, the only IIIF resource this extension can build is record manifests.
+This requires the `record_show` action to be available from the `ckanext-nhm` extension
+(there is
+an [open issue](https://github.com/NaturalHistoryMuseum/ckanext-nhm/issues/602) to move
+this action to a different extension, most likely
+[ckanext-versioned-datastore](https://github.com/NaturalHistoryMuseum/ckanext-versioned-datastore))
+.
+
+To build a record manifest you must provide the appropriate identifier, which must be of
+the format `resource/<resource_id>/record/<record_id>`, for example:
+`resource/afea211d-1b3d-49ad-9d15-17f0de368967/record/429`.
+This example identifies the record with ID `429` from the resource with ID
+`afea211d-1b3d-49ad-9d15-17f0de368967`.
+If the record and the resource can be found, and images can be found on the record, then
+a manifest is returned.
+If any of these conditions fail, the action returns `None` and the endpoint returns 404.
+
+The images are detected in the record by looking for the `_image_field` extra on the
+resource.
+This should define the field name in the record where images can be found.
+The value associated with this image field in the record can be:
+
+- a string (should be a URL)
+- a list of strings (each element should be a URL)
+- a string containing several URLs separated by a delimiter (this should be defined on
+  the resource using the `_image_delimiter` extra)
+- a list of dicts (the URL is extracted by looking for an `identifier` field within
+  each dict)
+
+To fill out the values in the manifest, the builder pulls out fields as specified by
+more resource level extras or by falling back to a default value.
+These are:
+
+- `"label"` - attempts to use `_title_field` extra but falls back to record ID
+- `"rights"` - attempts to use `_image_licence` extra but falls back
+  to [cc-by](https://creativecommons.org/licenses/by/4.0/)
+
+The `"metadata"` field in the manifest is populated using the fields and values in the
+record data itself.
+
+## Adding a Custom Builder
+
+To add a custom builder all you have to do is implement the `IIIIF` interface in your
+extension plugin.
+For example:
+
+```python
+import ckan.plugins as plugins
+from ckanext.iiif.interfaces import IIIIF
+from typing import Optional, Callable, List
+
+
+def my_builder(identifier: str) -> Optional[dict]:
+    ...
+
+
+class MyExtension(plugins.SingletonPlugin):
+    plugins.implements(IIIIF)
+
+    def register_iiif_builders(self, builders: List[Callable[[str], Optional[dict]]]):
+        builders.append(my_builder)
+```
+
+When a request is made to build a IIIF resource, each of the registered builders is
+called in turn with the identifier.
+This means that the builders need to both match the identifier to confirm it matches its
+pattern or meets its criteria, and generate the manifest.
+
+The builders should:
+
+- Return `None` if the identifier doesn't match the builders requirements. When this
+  happens, the logic continues and tries the next registered builder function.
+- Raise a `ckanext.iiif.builders.utils.IIIFBuildError` if the identifier matched but the
+  manifest couldn't be generated for any reason. This will stop the logic from checking
+  any other builders for matches and return `None` to the caller.
+- Raise any other type of `Exception` if an unexpected error occurred during matching or
+  processing. This will be propagated to the caller.
+
 # Testing
 
 There is a Docker compose configuration available in this repository to make it easier
