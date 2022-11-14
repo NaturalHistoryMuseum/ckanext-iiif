@@ -16,7 +16,7 @@ class TestBuildIIIFResource:
 
     def test_match(self):
         mock_manifest = {"beans": 3}
-        mock_builder = MagicMock(return_value=mock_manifest)
+        mock_builder = MagicMock(match_and_build=MagicMock(return_value=mock_manifest))
 
         build_iiif_resource = toolkit.get_action("build_iiif_resource")
 
@@ -24,7 +24,7 @@ class TestBuildIIIFResource:
             assert build_iiif_resource({}, {"identifier": "test"}) == mock_manifest
 
     def test_no_match(self):
-        mock_builder = MagicMock(return_value=None)
+        mock_builder = MagicMock(match_and_build=MagicMock(return_value=None))
 
         build_iiif_resource = toolkit.get_action("build_iiif_resource")
 

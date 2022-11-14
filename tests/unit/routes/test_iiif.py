@@ -14,7 +14,7 @@ class TestIIIFRoute:
 
     def test_result(self):
         mock_manifest = {"limbs": True}
-        mock_builder = MagicMock(return_value=mock_manifest)
+        mock_builder = MagicMock(match_and_build=MagicMock(return_value=mock_manifest))
 
         with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             response: Response = resource("test")
@@ -24,7 +24,7 @@ class TestIIIFRoute:
         assert response.json == mock_manifest
 
     def test_no_result(self):
-        mock_builder = MagicMock(return_value=None)
+        mock_builder = MagicMock(match_and_build=MagicMock(return_value=None))
         # I'm mocking abort here because of some issues getting Flask in the test env
         # to work when calling CKAN's abort (which gets converted into a Werkzeug
         # NotFound). It seems to want a secret_key and I couldn't make it to work so

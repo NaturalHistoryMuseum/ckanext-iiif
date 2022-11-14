@@ -20,7 +20,7 @@ class TestIIIFRoute:
     def test_match(self, app):
         identifier = "resource/1/record/1"
         mock_manifest = {"beans": 3}
-        mock_builder = MagicMock(return_value=mock_manifest)
+        mock_builder = MagicMock(match_and_build=MagicMock(return_value=mock_manifest))
 
         with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             response = app.get(f"/iiif/{identifier}")
@@ -28,11 +28,11 @@ class TestIIIFRoute:
         assert response.status_code == 200
         assert response.mimetype == "application/json"
         assert json.loads(response.data) == mock_manifest
-        assert mock_builder.call_args == call(identifier)
+        assert mock_builder.match_and_build.call_args == call(identifier)
 
     def test_no_match(self, app):
         identifier = "resource/1/record/1"
-        mock_builder = MagicMock(return_value=None)
+        mock_builder = MagicMock(match_and_build=MagicMock(return_value=None))
 
         with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": mock_builder}):
             response = app.get(f"/iiif/{identifier}")

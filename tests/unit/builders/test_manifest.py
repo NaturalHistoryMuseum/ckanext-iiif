@@ -4,14 +4,15 @@ from ckan.plugins import toolkit
 from ckan.tests import factories
 from unittest.mock import patch, MagicMock
 
-from ckanext.iiif.builders import manifest
-from ckanext.iiif.builders.manifest import build_record_manifest
+from ckanext.iiif.builders.manifest import RecordManifestBuilder
 from ckanext.iiif.builders.utils import wrap_language, IIIFBuildError
 
 
 class TestBuildManifestID:
     def test_basic(self):
-        manifest_id = manifest._build_record_manifest_id({"id": 5}, {"_id": 829})
+        manifest_id = RecordManifestBuilder._build_record_manifest_id(
+            {"id": 5}, {"_id": 829}
+        )
         assert manifest_id == "resource/5/record/829"
 
 
@@ -19,24 +20,24 @@ class TestBuildLabel:
     def test_with_title_field(self):
         title_field = "fieldX"
         title_value = "The title!"
-        label = manifest._build_label(
+        label = RecordManifestBuilder._build_label(
             {"_title_field": title_field}, {title_field: title_value}
         )
         assert label == wrap_language(title_value)
 
     def test_without_title_field(self):
         record_id = 52
-        label = manifest._build_label({}, {"_id": record_id})
+        label = RecordManifestBuilder._build_label({}, {"_id": record_id})
         assert label == wrap_language(str(record_id))
 
 
 class TestBuildRights:
     def test_with_image_licence(self):
-        licence_url = manifest._build_rights({"_image_licence": "cc-zero"})
+        licence_url = RecordManifestBuilder._build_rights({"_image_licence": "cc-zero"})
         assert licence_url == "http://www.opendefinition.org/licenses/cc-zero"
 
     def test_without_image_licence(self):
-        licence_url = manifest._build_rights({})
+        licence_url = RecordManifestBuilder._build_rights({})
         assert licence_url == "http://www.opendefinition.org/licenses/cc-by"
 
 
@@ -45,7 +46,7 @@ class TestBuildMetadata:
         record = {
             "int": 40,
         }
-        metadata = manifest._build_metadata(record)
+        metadata = RecordManifestBuilder._build_metadata(record)
         assert len(metadata) == 1
         assert metadata[0] == {
             "label": wrap_language("int"),
@@ -56,7 +57,7 @@ class TestBuildMetadata:
         record = {
             "str": "beans",
         }
-        metadata = manifest._build_metadata(record)
+        metadata = RecordManifestBuilder._build_metadata(record)
         assert len(metadata) == 1
         assert metadata[0] == {
             "label": wrap_language("str"),
@@ -67,7 +68,7 @@ class TestBuildMetadata:
         record = {
             "list": ["a", "b", "c"],
         }
-        metadata = manifest._build_metadata(record)
+        metadata = RecordManifestBuilder._build_metadata(record)
         assert len(metadata) == 1
         assert metadata[0] == {
             "label": wrap_language("list"),
@@ -78,7 +79,7 @@ class TestBuildMetadata:
         record = {
             "dict": {"a": 1, "b": 2},
         }
-        metadata = manifest._build_metadata(record)
+        metadata = RecordManifestBuilder._build_metadata(record)
         assert len(metadata) == 1
         assert metadata[0] == {
             "label": wrap_language("dict"),
@@ -92,7 +93,7 @@ class TestBuildMetadata:
             "list": ["a", "b", "c"],
             "dict": {"a": 1, "b": 2},
         }
-        metadata = manifest._build_metadata(record)
+        metadata = RecordManifestBuilder._build_metadata(record)
         assert len(metadata) == 4
         assert metadata[0] == {
             "label": wrap_language("int"),
@@ -120,7 +121,9 @@ class TestBuildCanvas:
         image_number = 4
         image_id = "https://some.url/to/the/image"
 
-        canvas = manifest._build_canvas(manifest_id, image_number, image_id)
+        canvas = RecordManifestBuilder._build_canvas(
+            manifest_id, image_number, image_id
+        )
 
         assert canvas["id"] == toolkit.url_for(
             "iiif.resource",
@@ -139,20 +142,20 @@ class TestGetImages:
     def test_no_image_field(self):
         resource = {}
         record = {}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 0
 
     def test_image_field_but_not_in_record(self):
         resource = {"_image_field": "images"}
         record = {}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 0
 
     def test_image_field_with_str_no_delimiter(self):
         image_url = "https://dogr.io/wow/such/test/image.jpg"
         resource = {"_image_field": "images"}
         record = {"images": image_url}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 1
         assert images[0] == image_url
 
@@ -160,7 +163,7 @@ class TestGetImages:
         image_url = "https://dogr.io/wow/such/test/image.jpg"
         resource = {"_image_field": "images", "_image_delimiter": ","}
         record = {"images": image_url}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 1
         assert images[0] == image_url
 
@@ -169,7 +172,7 @@ class TestGetImages:
         image_url_2 = "https://dogr.io/wow/second/such/test/image.jpg"
         resource = {"_image_field": "images", "_image_delimiter": ","}
         record = {"images": f"{image_url_1},{image_url_2}"}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 2
         assert images[0] == image_url_1
         assert images[1] == image_url_2
@@ -182,7 +185,7 @@ class TestGetImages:
         image_url_2 = "https://dogr.io/wow/second/such/test/image.jpg"
         resource = {"_image_field": "images", "_image_delimiter": ","}
         record = {"images": [image_url_1, image_url_2]}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 2
         assert images[0] == image_url_1
         assert images[1] == image_url_2
@@ -192,7 +195,7 @@ class TestGetImages:
         image_url_2 = "https://dogr.io/wow/second/such/test/image.jpg"
         resource = {"_image_field": "images"}
         record = {"images": [image_url_1, image_url_2]}
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 2
         assert images[0] == image_url_1
         assert images[1] == image_url_2
@@ -207,7 +210,7 @@ class TestGetImages:
                 {"identifier": image_url_2, "name": "Image 2"},
             ]
         }
-        images = manifest._get_images(resource, record)
+        images = RecordManifestBuilder._get_images(resource, record)
         assert len(images) == 2
         assert images[0] == image_url_1
         assert images[1] == image_url_2
@@ -215,13 +218,15 @@ class TestGetImages:
 
 @pytest.mark.usefixtures("clean_db")
 class TestBuildRecordManifest:
-    @patch("ckanext.iiif.builders.manifest._build_record_manifest_id")
-    @patch("ckanext.iiif.builders.manifest._get_images")
+    @patch(
+        "ckanext.iiif.builders.manifest.RecordManifestBuilder._build_record_manifest_id"
+    )
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._get_images")
     @patch("ckanext.iiif.builders.manifest.create_id_url")
-    @patch("ckanext.iiif.builders.manifest._build_label")
-    @patch("ckanext.iiif.builders.manifest._build_metadata")
-    @patch("ckanext.iiif.builders.manifest._build_rights")
-    @patch("ckanext.iiif.builders.manifest._build_canvas")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._build_label")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._build_metadata")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._build_rights")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._build_canvas")
     def test_manifest_props(
         self,
         canvas_mock,
@@ -241,7 +246,7 @@ class TestBuildRecordManifest:
         images_mock.configure_mock(return_value=images)
         canvas_mock.configure_mock(side_effect=["first", "second"])
 
-        mani = build_record_manifest(resource, record_data)
+        mani = RecordManifestBuilder.build_record_manifest(resource, record_data)
 
         assert images_mock.called
         assert mani["@context"] == "http://iiif.io/api/presentation/3/context.json"
@@ -254,8 +259,8 @@ class TestBuildRecordManifest:
         assert mani["items"] == ["first", "second"]
         assert "logo" in mani
 
-    @patch("ckanext.iiif.builders.manifest._get_images")
-    @patch("ckanext.iiif.builders.manifest._build_canvas")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._get_images")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder._build_canvas")
     def test_no_images(self, canvas_mock, images_mock):
         resource = factories.Resource()
         record_data = {
@@ -266,7 +271,7 @@ class TestBuildRecordManifest:
         canvas_mock.configure_mock(side_effect=[])
 
         with pytest.raises(IIIFBuildError, match="No images found"):
-            build_record_manifest(resource, record_data)
+            RecordManifestBuilder.build_record_manifest(resource, record_data)
 
 
 class TestMatchAndBuildRecordManifest:
@@ -275,11 +280,13 @@ class TestMatchAndBuildRecordManifest:
         ["test", "resource/beans", "resource/beans/record", "resource/beans/record/"],
     )
     def test_no_matches(self, identifier):
-        assert manifest.match_and_build_record_manifest(identifier) is None
+        builder = RecordManifestBuilder()
+        assert builder.match_and_build(identifier) is None
 
     def test_no_resource(self):
+        builder = RecordManifestBuilder()
         with pytest.raises(IIIFBuildError, match="Resource beans not found"):
-            manifest.match_and_build_record_manifest("resource/beans/record/4")
+            builder.match_and_build("resource/beans/record/4")
 
     @pytest.mark.usefixtures("clean_db")
     def test_no_record(self):
@@ -305,7 +312,7 @@ class TestMatchAndBuildRecordManifest:
             "ckanext.iiif.builders.manifest.toolkit.get_action", get_action_mock
         ):
             with pytest.raises(IIIFBuildError, match="Record 4 not found"):
-                manifest.match_and_build_record_manifest(
+                RecordManifestBuilder().match_and_build(
                     f"resource/{resource['id']}/record/4"
                 )
         record_show_mock.assert_called_once_with(
@@ -313,7 +320,7 @@ class TestMatchAndBuildRecordManifest:
         )
 
     @patch("ckanext.iiif.builders.manifest.toolkit.get_action")
-    @patch("ckanext.iiif.builders.manifest.build_record_manifest")
+    @patch("ckanext.iiif.builders.manifest.RecordManifestBuilder.build_record_manifest")
     def test_success(self, build_record_manifest_mock, get_action_mock):
         resource = MagicMock()
         record_data = MagicMock()
@@ -322,6 +329,6 @@ class TestMatchAndBuildRecordManifest:
         action_mock = MagicMock(side_effect=[resource, record])
         get_action_mock.configure_mock(return_value=action_mock)
 
-        manifest.match_and_build_record_manifest("resource/beans/record/1")
+        RecordManifestBuilder().match_and_build("resource/beans/record/1")
 
         build_record_manifest_mock.assert_called_once_with(resource, record_data)

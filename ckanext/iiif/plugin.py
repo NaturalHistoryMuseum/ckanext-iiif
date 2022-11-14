@@ -6,7 +6,7 @@ from contextlib import suppress
 
 from . import interfaces
 from . import routes
-from .builders.manifest import build_record_manifest
+from .builders.manifest import RecordManifestBuilder
 from .logic import actions, auth
 
 log = logging.getLogger(__name__)
@@ -68,7 +68,7 @@ class IIIFPlugin(plugins.SingletonPlugin):
             if resource_id not in resource_cache:
                 resource_cache[resource_id] = resource_show({}, {"id": resource_id})
             with suppress(Exception):
-                record["iiif"] = build_record_manifest(
+                record["iiif"] = RecordManifestBuilder.build_record_manifest(
                     resource_cache[resource_id], record["data"]
                 )
 

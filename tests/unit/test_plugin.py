@@ -2,7 +2,7 @@ import pytest
 from ckan.tests import factories
 from unittest.mock import patch, MagicMock, call
 
-from ckanext.iiif.builders.manifest import build_record_manifest
+from ckanext.iiif.builders.manifest import RecordManifestBuilder
 from ckanext.iiif.logic import actions
 from ckanext.iiif.plugin import IIIFPlugin
 
@@ -26,15 +26,17 @@ class TestDatastoreMultisearchModifyResponse:
             ]
         }
 
-        mock_build_record_manifest = MagicMock(return_value="yes")
+        mock_record_manifest_builder = MagicMock(
+            build_record_manifest=MagicMock(return_value="yes")
+        )
 
         with patch(
-            "ckanext.iiif.plugin.build_record_manifest", mock_build_record_manifest
+            "ckanext.iiif.plugin.RecordManifestBuilder", mock_record_manifest_builder
         ):
             updated_response = plugin.datastore_multisearch_modify_response(response)
 
-        assert all(record["iiif"] == "yes" for record in response["records"])
-        assert mock_build_record_manifest.mock_calls == [
+        assert all(record["iiif"] == "yes" for record in updated_response["records"])
+        assert mock_record_manifest_builder.build_record_manifest.mock_calls == [
             call(resource_1, record_data_1),
             call(resource_1, record_data_2),
             call(resource_2, record_data_3),
@@ -57,15 +59,18 @@ class TestDatastoreMultisearchModifyResponse:
             ]
         }
 
-        mock_build_record_manifest = MagicMock(side_effect=Exception("oh no!"))
+        mock_record_manifest_builder = MagicMock(
+            build_record_manifest=MagicMock(side_effect=Exception("oh no!"))
+        )
 
         with patch(
-            "ckanext.iiif.plugin.build_record_manifest", mock_build_record_manifest
+            "ckanext.iiif.plugin.RecordManifestBuilder",
+            mock_record_manifest_builder,
         ):
             updated_response = plugin.datastore_multisearch_modify_response(response)
 
-        assert all("iiif" not in record for record in response["records"])
-        assert mock_build_record_manifest.mock_calls == [
+        assert all("iiif" not in record for record in updated_response["records"])
+        assert mock_record_manifest_builder.build_record_manifest.mock_calls == [
             call(resource_1, record_data_1),
             call(resource_1, record_data_2),
             call(resource_2, record_data_3),
@@ -94,9 +99,9 @@ class TestDatastoreMultisearchModifyResponse:
         }
 
         updated_response = plugin.datastore_multisearch_modify_response(response)
-        assert updated_response["records"][0]["iiif"] == build_record_manifest(
-            resource_1, record_data
-        )
+        assert updated_response["records"][0][
+            "iiif"
+        ] == RecordManifestBuilder.build_record_manifest(resource_1, record_data)
 
 
 @pytest.mark.usefixtures("clean_db")
