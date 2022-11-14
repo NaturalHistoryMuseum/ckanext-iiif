@@ -35,7 +35,7 @@ repository = "https://github.com/NaturalHistoryMuseum/ckanext-iiif"
 changelog = "https://github.com/NaturalHistoryMuseum/ckanext-iiif/blob/main/CHANGELOG.md"
 
 [project.entry-points."ckan.plugins"]
-iiif = "ckanext.iiif.plugin:IiifPlugin"
+iiif = "ckanext.iiif.plugin:IIIFPlugin"
 
 
 [build-system]
