@@ -72,6 +72,8 @@ endpoint or the `build_iiif_resource` action where the identifier is passed in t
 dict in the key `"identifier"`.
 When this occurs the identifier is matched against any of the registered IIIF resource
 builders and if a match is found, the resource is returned.
+Identifiers can be built if the builder ID is known along with the necessary parameters
+by using the `build_iiif_identifier` action.
 
 ## Record Manifest Builder
 
@@ -126,20 +128,24 @@ import ckan.plugins as plugins
 from typing import Optional, Callable
 from typing import OrderedDict
 
+from ckanext.iiif.builders.abc import IIIFResourceBuilder
 from ckanext.iiif.interfaces import IIIIF
 
 
-def my_builder(identifier: str) -> Optional[dict]:
-    ...
+class MyBuilder(IIIFResourceBuilder):
+
+    def match_and_build(self, identifier: str) -> Optional[dict]:
+        ...
+
+    def build_identifier(self, *args, **kwargs) -> str:
+        ...
 
 
 class MyExtension(plugins.SingletonPlugin):
     plugins.implements(IIIIF)
 
-    def register_iiif_builders(
-        self, builders: OrderedDict[str, Callable[[str], Optional[dict]]]
-    ):
-        builders["my_builder"]: my_builder
+    def register_iiif_builders(self, builders: OrderedDict[str, IIIFResourceBuilder]):
+        builders["my_builder"]: MyBuilder()
 ```
 
 When a request is made to build a IIIF resource, each of the registered builders is
