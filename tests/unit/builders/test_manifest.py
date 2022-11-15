@@ -9,10 +9,18 @@ from ckanext.iiif.builders.utils import wrap_language, IIIFBuildError
 
 
 class TestBuildManifestID:
-    def test_basic(self):
+    def test_dicts(self):
         manifest_id = RecordManifestBuilder._build_record_manifest_id(
-            {"id": 5}, {"_id": 829}
+            {"id": "5"}, {"_id": "829"}
         )
+        assert manifest_id == "resource/5/record/829"
+
+    def test_str_ids(self):
+        manifest_id = RecordManifestBuilder._build_record_manifest_id("5", "829")
+        assert manifest_id == "resource/5/record/829"
+
+    def test_int_record_id(self):
+        manifest_id = RecordManifestBuilder._build_record_manifest_id("5", 829)
         assert manifest_id == "resource/5/record/829"
 
 
