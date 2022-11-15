@@ -332,3 +332,23 @@ class TestMatchAndBuildRecordManifest:
         RecordManifestBuilder().match_and_build("resource/beans/record/1")
 
         build_record_manifest_mock.assert_called_once_with(resource, record_data)
+
+
+class TestBuildIdentifier:
+    def test_str_record_id(self):
+        resource_id = "abc"
+        record_id = "293"
+        builder = RecordManifestBuilder()
+        identifier = builder.build_identifier(resource_id, record_id)
+        assert identifier == RecordManifestBuilder._build_record_manifest_id(
+            resource_id, record_id
+        )
+
+    def test_int_record_id(self):
+        resource_id = "abc"
+        record_id = 293
+        builder = RecordManifestBuilder()
+        identifier = builder.build_identifier(resource_id, record_id)
+        assert identifier == RecordManifestBuilder._build_record_manifest_id(
+            resource_id, record_id
+        )

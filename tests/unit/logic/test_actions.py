@@ -1,8 +1,9 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
+from ckanext.iiif.builders.manifest import RecordManifestBuilder
 from ckanext.iiif.builders.utils import IIIFBuildError
-from ckanext.iiif.logic.actions import build_iiif_resource
+from ckanext.iiif.logic.actions import build_iiif_resource, build_iiif_identifier
 
 
 class TestBuildIIIFResource:
@@ -90,3 +91,29 @@ class TestBuildIIIFResource:
             # first one doesn't match, second throws an error and the other one isn't
             # considered
             assert build_iiif_resource("test") is None
+
+
+class TestBuildIIIFIdentifier:
+    def test_no_builders(self):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {}):
+            assert build_iiif_identifier("test") is None
+
+    def test_no_builder_matches(self):
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {"mock": MagicMock()}):
+            assert build_iiif_identifier("not mock") is None
+
+    def test_success(self):
+        builder_id = "mock"
+        mock_identifier = "hello!"
+        mock_builder = MagicMock(
+            build_identifier=MagicMock(return_value=mock_identifier)
+        )
+
+        with patch("ckanext.iiif.logic.actions.BUILDERS", {builder_id: mock_builder}):
+            assert build_iiif_identifier("mock", 6, x=7) == mock_identifier
+
+        mock_builder.build_identifier.assert_called_once_with(6, x=7)
+
+    def test_wrong_args(self):
+        with pytest.raises(TypeError):
+            assert build_iiif_identifier(RecordManifestBuilder.BUILDER_ID, 6, x=7)

@@ -14,3 +14,7 @@ class IIIFResourceBuilder(abc.ABC):
     @abc.abstractmethod
     def match_and_build(self, identifier: str) -> Optional[dict]:
         ...
+
+    @abc.abstractmethod
+    def build_identifier(self, *args, **kwargs) -> str:
+        ...

@@ -13,6 +13,19 @@ from .utils import create_id_url, wrap_language, IIIFBuildError
 class RecordManifestBuilder(IIIFResourceBuilder):
     BUILDER_ID = "record"
 
+    def build_identifier(self, resource_id: str, record_id: Union[str, int]) -> str:
+        """
+        Given a resource_id and a record_id, builds the record manifest identifier and
+        returns it.
+
+        :param resource_id: the resource ID
+        :param record_id: the record ID
+        :return: the identifier
+        """
+        return RecordManifestBuilder._build_record_manifest_id(
+            resource_id, str(record_id)
+        )
+
     def match_and_build(self, identifier: str) -> Optional[dict]:
         """
         Build the manifest for the given resource id & record id identifier. If the
