@@ -4,7 +4,7 @@ version = "2.1.0"
 description = "IIIF for CKAN"
 readme = "README.md"
 requires-python = ">=3.6"
-license = {text = "GPL-3.0-or-later"}
+license = { text = "GPL-3.0-or-later" }
 authors = [
     { name = "Natural History Museum", email = "data@nhm.ac.uk" }
 ]
@@ -19,7 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8"
 ]
 dependencies = [
-    "ckantools==0.2.0"
+    "ckantools"
 ]
 
 [project.optional-dependencies]
@@ -35,7 +35,7 @@ repository = "https://github.com/NaturalHistoryMuseum/ckanext-iiif"
 changelog = "https://github.com/NaturalHistoryMuseum/ckanext-iiif/blob/main/CHANGELOG.md"
 
 [project.entry-points."ckan.plugins"]
-iiif = "ckanext.iiif.plugin:IiifPlugin"
+iiif = "ckanext.iiif.plugin:IIIFPlugin"
 
 
 [build-system]
@@ -51,7 +51,7 @@ zip-safe = false
 exclude = ["tests", "docs"]
 
 [tool.commitizen]
-name = "cz_conventional_commits"
+name = "cz_nhm"
 version = "2.1.0"
 tag_format = "v$version"
 update_changelog_on_bump = true
