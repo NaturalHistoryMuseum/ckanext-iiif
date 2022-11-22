@@ -1,20 +1,22 @@
 import ckan.plugins as plugins
 import logging
 from ckan.plugins import toolkit
+from ckantools.loaders import create_actions, create_auth
 from contextlib import suppress
 
 from . import interfaces
 from . import routes
-from .lib.manifest import IIIFRecordManifestBuilder
-from .routes import iiif
+from .builders.manifest import RecordManifestBuilder
+from .logic import actions, auth
 
 log = logging.getLogger(__name__)
 
 
 class IIIFPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IConfigurable)
-    plugins.implements(interfaces.IIIIF)
 
     try:
         # hook if we can
@@ -24,39 +26,50 @@ class IIIFPlugin(plugins.SingletonPlugin):
     except ImportError:
         pass
 
-    # IIIIF
-    def get_builders(self):
-        return [
-            IIIFRecordManifestBuilder,
-        ]
+    def get_actions(self):
+        """
+        IActions hook.
+        """
+        return create_actions(actions)
 
-    # IConfigurable
+    def get_auth_functions(self):
+        """
+        IAuthFunctions hook.
+        """
+        return create_auth(auth)
+
     def configure(self, ckan_config):
-        for plugin in plugins.PluginImplementations(interfaces.IIIIF):
-            for builder in plugin.get_builders():
-                if builder.regex in iiif.builders:
-                    log.warning(
-                        'Duplicate IIIF builder regex: {}'.format(builder.regex.pattern)
-                    )
-                iiif.builders[builder.regex] = builder.get_builder
+        """
+        IConfigurable hook. Here, the builders from other plugins are added to the
+        BUILDERS list.
 
-    # IBlueprint
+        :param ckan_config:
+        """
+        for plugin in plugins.PluginImplementations(interfaces.IIIIF):
+            plugin.register_iiif_builders(actions.BUILDERS)
+
     def get_blueprint(self):
+        """
+        IBlueprint hook.
+        """
         return routes.blueprints
 
-    # IVersionedDatastore
     def datastore_multisearch_modify_response(self, response):
-        resource_cache = {}
-        resource_show = toolkit.get_action('resource_show')
+        """
+        IVersionedDatastore hook.
 
-        for record in response['records']:
-            resource_id = record['resource']
+        Only used if ckanext-versioned-datastore is installed.
+        """
+        resource_cache = {}
+        resource_show = toolkit.get_action("resource_show")
+
+        for record in response["records"]:
+            resource_id = record["resource"]
             if resource_id not in resource_cache:
-                resource_cache[resource_id] = resource_show({}, {'id': resource_id})
+                resource_cache[resource_id] = resource_show({}, {"id": resource_id})
             with suppress(Exception):
-                builder = IIIFRecordManifestBuilder(
-                    resource_cache[resource_id], record['data']
+                record["iiif"] = RecordManifestBuilder.build_record_manifest(
+                    resource_cache[resource_id], record["data"]
                 )
-                record['iiif'] = builder.build()
 
         return response
