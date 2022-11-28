@@ -1,6 +1,6 @@
 [project]
 name = "ckanext-iiif"
-version = "2.1.0"
+version = "3.0.0"
 description = "IIIF for CKAN"
 readme = "README.md"
 requires-python = ">=3.6"
@@ -52,7 +52,7 @@ exclude = ["tests", "docs"]
 
 [tool.commitizen]
 name = "cz_nhm"
-version = "2.1.0"
+version = "3.0.0"
 tag_format = "v$version"
 update_changelog_on_bump = true
 changelog_incremental = true
