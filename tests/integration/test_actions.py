@@ -1,5 +1,6 @@
 import pytest
 from ckan.plugins import toolkit
+from ckan.tests import factories
 from unittest.mock import MagicMock, patch
 
 from ckanext.iiif.builders.manifest import RecordManifestBuilder
@@ -72,3 +73,19 @@ class TestBuildIIIFIdentifier:
             build_iiif_identifier(
                 {}, {"builder_id": RecordManifestBuilder.BUILDER_ID, "bananas": 63}
             )
+
+    def test_record_builder(self):
+        build_iiif_identifier = toolkit.get_action("build_iiif_identifier")
+        resource_id = "xyz"
+        record_id = 5
+
+        action_params = {
+            "builder_id": "record",
+            "resource_id": resource_id,
+            "record_id": record_id,
+        }
+
+        assert (
+            build_iiif_identifier({}, action_params)
+            == f"resource/{resource_id}/record/{record_id}"
+        )
