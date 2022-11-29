@@ -16,5 +16,6 @@ class IIIFResourceBuilder(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def build_identifier(self, *args, **kwargs) -> str:
+    def build_identifier(self, **kwargs) -> str:
+        # this is called from an action so only kwargs are used
         ...
