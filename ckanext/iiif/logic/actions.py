@@ -17,7 +17,7 @@ BUILDERS: OrderedDictType[str, IIIFResourceBuilder] = OrderedDict()
 BUILDERS[RecordManifestBuilder.BUILDER_ID] = RecordManifestBuilder()
 
 build_iiif_resource_schema = {
-    "identifier": [toolkit.get_validator("not_empty"), str],
+    'identifier': [toolkit.get_validator('not_empty'), str],
 }
 build_iiif_resource_help = """
 Given an identifier, builds the corresponding IIIF resource (e.g. manifest) and returns
@@ -52,7 +52,7 @@ def build_iiif_resource(identifier: str) -> Optional[dict]:
 
 
 build_iiif_identifier_schema = {
-    "builder_id": [toolkit.get_validator("not_empty"), str],
+    'builder_id': [toolkit.get_validator('not_empty'), str],
 }
 build_iiif_identifier_help = """
 Given a builder ID plus args and kwargs, builds the corresponding IIIF resource

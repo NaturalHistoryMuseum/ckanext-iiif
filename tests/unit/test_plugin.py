@@ -7,7 +7,7 @@ from ckanext.iiif.logic import actions
 from ckanext.iiif.plugin import IIIFPlugin
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures('clean_db')
 class TestDatastoreMultisearchModifyResponse:
     def test_success(self):
         plugin = IIIFPlugin()
@@ -19,23 +19,23 @@ class TestDatastoreMultisearchModifyResponse:
         record_data_3 = MagicMock()
 
         response = {
-            "records": [
-                {"resource": resource_1["id"], "data": record_data_1},
-                {"resource": resource_1["id"], "data": record_data_2},
-                {"resource": resource_2["id"], "data": record_data_3},
+            'records': [
+                {'resource': resource_1['id'], 'data': record_data_1},
+                {'resource': resource_1['id'], 'data': record_data_2},
+                {'resource': resource_2['id'], 'data': record_data_3},
             ]
         }
 
         mock_record_manifest_builder = MagicMock(
-            build_record_manifest=MagicMock(return_value="yes")
+            build_record_manifest=MagicMock(return_value='yes')
         )
 
         with patch(
-            "ckanext.iiif.plugin.RecordManifestBuilder", mock_record_manifest_builder
+            'ckanext.iiif.plugin.RecordManifestBuilder', mock_record_manifest_builder
         ):
             updated_response = plugin.datastore_multisearch_modify_response(response)
 
-        assert all(record["iiif"] == "yes" for record in updated_response["records"])
+        assert all(record['iiif'] == 'yes' for record in updated_response['records'])
         assert mock_record_manifest_builder.build_record_manifest.mock_calls == [
             call(resource_1, record_data_1),
             call(resource_1, record_data_2),
@@ -52,24 +52,24 @@ class TestDatastoreMultisearchModifyResponse:
         record_data_3 = MagicMock()
 
         response = {
-            "records": [
-                {"resource": resource_1["id"], "data": record_data_1},
-                {"resource": resource_1["id"], "data": record_data_2},
-                {"resource": resource_2["id"], "data": record_data_3},
+            'records': [
+                {'resource': resource_1['id'], 'data': record_data_1},
+                {'resource': resource_1['id'], 'data': record_data_2},
+                {'resource': resource_2['id'], 'data': record_data_3},
             ]
         }
 
         mock_record_manifest_builder = MagicMock(
-            build_record_manifest=MagicMock(side_effect=Exception("oh no!"))
+            build_record_manifest=MagicMock(side_effect=Exception('oh no!'))
         )
 
         with patch(
-            "ckanext.iiif.plugin.RecordManifestBuilder",
+            'ckanext.iiif.plugin.RecordManifestBuilder',
             mock_record_manifest_builder,
         ):
             updated_response = plugin.datastore_multisearch_modify_response(response)
 
-        assert all("iiif" not in record for record in updated_response["records"])
+        assert all('iiif' not in record for record in updated_response['records'])
         assert mock_record_manifest_builder.build_record_manifest.mock_calls == [
             call(resource_1, record_data_1),
             call(resource_1, record_data_2),
@@ -82,43 +82,43 @@ class TestDatastoreMultisearchModifyResponse:
         # what this test does
         plugin = IIIFPlugin()
 
-        resource_1 = factories.Resource(_image_field="images")
+        resource_1 = factories.Resource(_image_field='images')
         record_data = {
-            "_id": 4,
-            "arms": "yes",
-            "length": 15,
-            "images": ["https://image.com/image.jpg"],
+            '_id': 4,
+            'arms': 'yes',
+            'length': 15,
+            'images': ['https://image.com/image.jpg'],
         }
         response = {
-            "records": [
+            'records': [
                 {
-                    "resource": resource_1["id"],
-                    "data": record_data,
+                    'resource': resource_1['id'],
+                    'data': record_data,
                 },
             ]
         }
 
         updated_response = plugin.datastore_multisearch_modify_response(response)
-        assert updated_response["records"][0][
-            "iiif"
+        assert updated_response['records'][0][
+            'iiif'
         ] == RecordManifestBuilder.build_record_manifest(resource_1, record_data)
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures('clean_db')
 class TestConfigure:
     def test_builders_are_hooked(self):
         plugin = IIIFPlugin()
 
         class MockPlugin:
             def register_iiif_builders(self, builders):
-                builders["test"] = "yay!"
+                builders['test'] = 'yay!'
 
         plugin_implementations_mock = MagicMock(return_value=[MockPlugin()])
 
         with patch(
-            "ckanext.iiif.plugin.plugins.PluginImplementations",
+            'ckanext.iiif.plugin.plugins.PluginImplementations',
             plugin_implementations_mock,
         ):
             plugin.configure(MagicMock())
 
-        assert actions.BUILDERS["test"] == "yay!"
+        assert actions.BUILDERS['test'] == 'yay!'

@@ -7,6 +7,6 @@ def test_wrap_language():
     # convert the value to a string)
     test_value = MagicMock()
 
-    assert wrap_language(test_value) == {"none": [test_value]}
-    assert wrap_language([test_value]) == {"none": [test_value]}
-    assert wrap_language(test_value, language="beans") == {"beans": [test_value]}
+    assert wrap_language(test_value) == {'none': [test_value]}
+    assert wrap_language([test_value]) == {'none': [test_value]}
+    assert wrap_language(test_value, language='beans') == {'beans': [test_value]}
