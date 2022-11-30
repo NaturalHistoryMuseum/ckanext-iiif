@@ -70,8 +70,12 @@ Returns: a str or None if no builder could be found to build the identifier
 @action(
     build_iiif_identifier_schema, build_iiif_identifier_help, toolkit.side_effect_free
 )
-def build_iiif_identifier(builder_id: str, *args, **kwargs) -> Optional[str]:
+def build_iiif_identifier(builder_id: str, original_data_dict: dict) -> Optional[str]:
     if builder_id not in BUILDERS:
         return None
 
-    return BUILDERS[builder_id].build_identifier(*args, **kwargs)
+    if not original_data_dict:
+        original_data_dict = {}
+    else:
+        original_data_dict.pop('builder_id', None)
+    return BUILDERS[builder_id].build_identifier(**original_data_dict)
