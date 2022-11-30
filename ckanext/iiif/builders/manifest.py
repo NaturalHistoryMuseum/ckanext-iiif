@@ -131,7 +131,7 @@ class RecordManifestBuilder(IIIFResourceBuilder):
         :return: the label to use for this manifest
         """
         title_field = resource.get('_title_field')
-        if title_field is None:
+        if not title_field:
             title_field = '_id'
         # make sure the value is a string (this should only be necessary if the _id is
         # used)

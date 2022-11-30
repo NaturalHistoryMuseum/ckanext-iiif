@@ -38,6 +38,14 @@ class TestBuildLabel:
         label = RecordManifestBuilder._build_label({}, {'_id': record_id})
         assert label == wrap_language(str(record_id))
 
+    @pytest.mark.parametrize('title_field', [None, ''])
+    def test_with_blank_title_field(self, title_field: str):
+        record_id = 52
+        label = RecordManifestBuilder._build_label(
+            {'_title_field': title_field}, {'_id': record_id, title_field: 'lol no'}
+        )
+        assert label == wrap_language(str(record_id))
+
 
 class TestBuildRights:
     def test_with_image_licence(self):
