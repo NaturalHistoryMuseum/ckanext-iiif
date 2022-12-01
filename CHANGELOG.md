@@ -1,5 +1,26 @@
 # Changelog
 
+## v3.0.1 (2022-12-01)
+
+### Fix
+
+- use not instead of is None to catch empty strings too
+- fix the build_iiif_identifier action
+
+### Docs
+
+- **readme**: format test section
+- **readme**: update installation steps
+- **readme**: update ckan patch version in header badge
+
+### Style
+
+- use single quotes
+
+### Tests
+
+- Add breaking test to confirm build_iiif_identifier action failure
+
 ## v3.0.0 (2022-11-28)
 
 ### Breaking Changes
