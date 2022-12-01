@@ -9,18 +9,18 @@ def create_id_url(identifier: str) -> str:
     :param identifier: the IIIF resource ID
     :return: the full URL for the IIIF resource (e.g. a manifest)
     """
-    return toolkit.url_for("iiif.resource", identifier=identifier, _external=True)
+    return toolkit.url_for('iiif.resource', identifier=identifier, _external=True)
 
 
 def wrap_language(
-    value: Union[str, List[str]], language="none"
+    value: Union[str, List[str]], language='none'
 ) -> Dict[str, List[str]]:
     """
     Wraps the given value in the appropriate structure required by IIIF to convey
     language options.
 
     :param value: the value/values
-    :param language: the language, defaults to "none"
+    :param language: the language, defaults to 'none'
     :return: the value in the right IIIF language format
     """
     if not isinstance(value, list):
@@ -39,4 +39,4 @@ class IIIFBuildError(Exception):
         :param identifier: the IIIF resource identifier
         :param message: the error message
         """
-        super().__init__(f"Failed to build {identifier} due to {message}")
+        super().__init__(f'Failed to build {identifier} due to {message}')

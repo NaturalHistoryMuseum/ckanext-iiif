@@ -17,7 +17,7 @@ BUILDERS: OrderedDictType[str, IIIFResourceBuilder] = OrderedDict()
 BUILDERS[RecordManifestBuilder.BUILDER_ID] = RecordManifestBuilder()
 
 build_iiif_resource_schema = {
-    "identifier": [toolkit.get_validator("not_empty"), str],
+    'identifier': [toolkit.get_validator('not_empty'), str],
 }
 build_iiif_resource_help = """
 Given an identifier, builds the corresponding IIIF resource (e.g. manifest) and returns
@@ -52,7 +52,7 @@ def build_iiif_resource(identifier: str) -> Optional[dict]:
 
 
 build_iiif_identifier_schema = {
-    "builder_id": [toolkit.get_validator("not_empty"), str],
+    'builder_id': [toolkit.get_validator('not_empty'), str],
 }
 build_iiif_identifier_help = """
 Given a builder ID plus args and kwargs, builds the corresponding IIIF resource
@@ -70,8 +70,12 @@ Returns: a str or None if no builder could be found to build the identifier
 @action(
     build_iiif_identifier_schema, build_iiif_identifier_help, toolkit.side_effect_free
 )
-def build_iiif_identifier(builder_id: str, *args, **kwargs) -> Optional[str]:
+def build_iiif_identifier(builder_id: str, original_data_dict: dict) -> Optional[str]:
     if builder_id not in BUILDERS:
         return None
 
-    return BUILDERS[builder_id].build_identifier(*args, **kwargs)
+    if not original_data_dict:
+        original_data_dict = {}
+    else:
+        original_data_dict.pop('builder_id', None)
+    return BUILDERS[builder_id].build_identifier(**original_data_dict)

@@ -9,7 +9,7 @@ def build_iiif_resource(context, data_dict):
     :param context:
     :param data_dict:
     """
-    return {"success": True}
+    return {'success': True}
 
 
 @auth(anon=True)
@@ -20,4 +20,4 @@ def build_iiif_identifier(context, data_dict):
     :param context:
     :param data_dict:
     """
-    return {"success": True}
+    return {'success': True}
