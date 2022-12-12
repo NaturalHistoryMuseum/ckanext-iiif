@@ -1,5 +1,12 @@
 # Changelog
 
+## v3.0.2 (2022-12-12)
+
+### Build System(s)
+
+- include top-level data files in theme folder
+- add package data
+
 ## v3.0.1 (2022-12-01)
 
 ### Fix
