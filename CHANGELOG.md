@@ -1,5 +1,11 @@
 # Changelog
 
+## v3.0.3 (2023-01-30)
+
+### Build System(s)
+
+- **docker**: use 'latest' tag for test docker image
+
 ## v3.0.2 (2022-12-12)
 
 ### Build System(s)
