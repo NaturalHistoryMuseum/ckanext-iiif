@@ -211,6 +211,17 @@ class RecordManifestBuilder(IIIFResourceBuilder):
                             'body': {
                                 'id': image_id,
                                 'type': 'Image',
+                                # TODO: this is assuming the image is being served by a
+                                #       IIIF service and it's level2, which is will work
+                                #       for the key scenario we're supporting but
+                                #       nothing else
+                                'service': [
+                                    {
+                                        'id': image_id,
+                                        'type': 'ImageService3',
+                                        'profile': 'level2',
+                                    },
+                                ],
                             },
                             'target': canvas_id,
                         },

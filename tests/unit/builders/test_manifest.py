@@ -151,7 +151,17 @@ class TestBuildCanvas:
         annotation = canvas['items'][0]['items'][0]
         assert annotation['type'] == 'Annotation'
         assert annotation['motivation'] == 'painting'
-        assert annotation['body'] == {'id': image_id, 'type': 'Image'}
+        assert annotation['body'] == {
+            'id': image_id,
+            'type': 'Image',
+            'service': [
+                {
+                    'id': image_id,
+                    'type': 'ImageService3',
+                    'profile': 'level2',
+                },
+            ],
+        }
 
 
 class TestGetImages:
