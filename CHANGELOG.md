@@ -1,5 +1,15 @@
 # Changelog
 
+## v3.0.8 (2023-05-09)
+
+### Fix
+
+- allow the images in a manifest to be correctly opened in mirador etc
+
+### Tests
+
+- fix the basic manifest test
+
 ## v3.0.7 (2023-04-11)
 
 ### Build System(s)
