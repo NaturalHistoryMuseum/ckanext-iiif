@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: CKAN Iiif extension
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: Natural History Museum
+    city: London
+    country: GB
+    alias: NHM
+    email: data@nhm.ac.uk
+repository-code: 'https://github.com/NaturalHistoryMuseum/ckanext-iiif'
+abstract: IIIF for CKAN
+keywords:
+  - ckan
+  - ckanext
+  - iiif
+license: GPL-3.0-or-later
+version: 3.0.9
