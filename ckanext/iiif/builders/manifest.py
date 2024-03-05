@@ -38,7 +38,9 @@ class RecordManifestBuilder(IIIFResourceBuilder):
                  required format
         :raise: IIIFBuildError if anything goes wrong after the identifier is matched
         """
-        regex = re.compile('resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$')
+        regex = re.compile(
+            'resource/(?P<resource_id>.+?)/record/(?P<record_id>[^/]+).*$'
+        )
         match = regex.match(identifier)
         if not match:
             return None
