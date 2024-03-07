@@ -135,7 +135,7 @@ class RecordManifestBuilder(IIIFResourceBuilder):
             title_field = '_id'
         # make sure the value is a string (this should only be necessary if the _id is
         # used)
-        return wrap_language(str(record[title_field]))
+        return wrap_language(str(record.get(title_field, record.get('_id'))))
 
     @staticmethod
     def _build_rights(resource: dict) -> str:
