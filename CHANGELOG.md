@@ -1,4 +1,19 @@
-# Changelog
+## v3.0.10 (2024-03-11)
+
+### Fix
+
+- redirect canvas links to main iiif manifest
+- use _id field as title if title field not in record
+
+### Chores/Misc
+
+- add build section to read the docs config
+- add regex for version line in citation file
+- add citation.cff to list of files with version
+- add contributing guidelines
+- add code of conduct
+- add citation file
+- update support.md links
 
 ## v3.0.9 (2023-07-17)
 
@@ -97,9 +112,9 @@
 
 ### Fix
 
+- stop producing manifests if no images are available on a record
 - change case on plugin name
 - exclude helpers from tests
-- stop producing manifests if no images are available on a record
 - unpin ckantools version
 
 ### Refactor
@@ -108,12 +123,12 @@
 
 ### Docs
 
-- fix markdown-include references
-- add section delimiters
 - **README.md**: update the docs to include the new class based style
 - **README.md**: update the documentation for extending the IIIF resource builders
 - **README.md**: add documentation about what is included in the extension and how to extend it
 - **README.md**: update the readme overview section
+- fix markdown-include references
+- add section delimiters
 - add logo
 
 ### Style
