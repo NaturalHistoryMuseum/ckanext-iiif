@@ -38,7 +38,9 @@ class RecordManifestBuilder(IIIFResourceBuilder):
                  required format
         :raise: IIIFBuildError if anything goes wrong after the identifier is matched
         """
-        regex = re.compile('resource/(?P<resource_id>.+?)/record/(?P<record_id>.+)$')
+        regex = re.compile(
+            'resource/(?P<resource_id>.+?)/record/(?P<record_id>[^/]+).*$'
+        )
         match = regex.match(identifier)
         if not match:
             return None
@@ -135,7 +137,7 @@ class RecordManifestBuilder(IIIFResourceBuilder):
             title_field = '_id'
         # make sure the value is a string (this should only be necessary if the _id is
         # used)
-        return wrap_language(str(record[title_field]))
+        return wrap_language(str(record.get(title_field, record.get('_id'))))
 
     @staticmethod
     def _build_rights(resource: dict) -> str:
