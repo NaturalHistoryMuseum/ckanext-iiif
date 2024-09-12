@@ -54,22 +54,20 @@ class IIIFPlugin(plugins.SingletonPlugin):
         """
         return routes.blueprints
 
-    def datastore_multisearch_modify_response(self, response):
+    def vds_after_multi_query(self, response, result):
         """
         IVersionedDatastore hook.
 
         Only used if ckanext-versioned-datastore is installed.
         """
         resource_cache = {}
-        resource_show = toolkit.get_action('resource_show')
+        resource_show = toolkit.get_action("resource_show")
 
-        for record in response['records']:
-            resource_id = record['resource']
+        for record in result["records"]:
+            resource_id = record["resource"]
             if resource_id not in resource_cache:
-                resource_cache[resource_id] = resource_show({}, {'id': resource_id})
+                resource_cache[resource_id] = resource_show({}, {"id": resource_id})
             with suppress(Exception):
-                record['iiif'] = RecordManifestBuilder.build_record_manifest(
-                    resource_cache[resource_id], record['data']
+                record["iiif"] = RecordManifestBuilder.build_record_manifest(
+                    resource_cache[resource_id], record["data"]
                 )
-
-        return response
