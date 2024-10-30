@@ -1,5 +1,6 @@
-from ckan.plugins import toolkit
 from typing import Dict, List, Union
+
+from ckan.plugins import toolkit
 
 
 def create_id_url(identifier: str) -> str:

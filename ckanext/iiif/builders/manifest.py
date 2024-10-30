@@ -1,13 +1,14 @@
 import re
+from typing import Dict, List, Optional, Union
+
 from ckan import model
 from ckan.common import config
 from ckan.lib.helpers import url_for_static_or_external
 from ckan.logic import NotFound
 from ckan.plugins import toolkit
-from typing import List, Dict, Optional, Union
 
 from .abc import IIIFResourceBuilder
-from .utils import create_id_url, wrap_language, IIIFBuildError
+from .utils import IIIFBuildError, create_id_url, wrap_language
 
 
 class RecordManifestBuilder(IIIFResourceBuilder):
@@ -35,8 +36,8 @@ class RecordManifestBuilder(IIIFResourceBuilder):
 
         :param identifier: the manifest ID
         :return: the manifest as a dict or None if the identifier wasn't a match to the
-                 required format
-        :raise: IIIFBuildError if anything goes wrong after the identifier is matched
+            required format
+        :raises IIIFBuildError: if anything goes wrong after the identifier is matched
         """
         regex = re.compile(
             'resource/(?P<resource_id>.+?)/record/(?P<record_id>[^/]+).*$'
@@ -71,7 +72,7 @@ class RecordManifestBuilder(IIIFResourceBuilder):
         :param resource: the resource dict
         :param record: the record data
         :return: the IIIF manifest for the record and its images
-        :raise: IIIFBuildError if no images are present on the record
+        :raises IIIFBuildError: if no images are present on the record
         """
         manifest_id = RecordManifestBuilder._build_record_manifest_id(resource, record)
 

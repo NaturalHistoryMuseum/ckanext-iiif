@@ -1,6 +1,7 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 from flask import Response
-from unittest.mock import patch, MagicMock
 
 from ckanext.iiif.routes.iiif import blueprint, resource
 

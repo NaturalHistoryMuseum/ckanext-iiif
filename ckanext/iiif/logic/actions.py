@@ -1,9 +1,10 @@
-from collections import OrderedDict
-
 import logging
+from collections import OrderedDict
+from typing import Optional
+from typing import OrderedDict as OrderedDictType
+
 from ckan.plugins import toolkit
 from ckantools.decorators import action
-from typing import Optional, OrderedDict as OrderedDictType
 
 from ..builders.abc import IIIFResourceBuilder
 from ..builders.manifest import RecordManifestBuilder

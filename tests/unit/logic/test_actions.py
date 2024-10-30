@@ -1,9 +1,10 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from ckanext.iiif.builders.manifest import RecordManifestBuilder
 from ckanext.iiif.builders.utils import IIIFBuildError
-from ckanext.iiif.logic.actions import build_iiif_resource, build_iiif_identifier
+from ckanext.iiif.logic.actions import build_iiif_identifier, build_iiif_resource
 
 
 class TestBuildIIIFResource:

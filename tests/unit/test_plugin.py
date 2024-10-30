@@ -1,6 +1,7 @@
+from unittest.mock import MagicMock, call, patch
+
 import pytest
 from ckan.tests import factories
-from unittest.mock import patch, MagicMock, call
 
 from ckanext.iiif.builders.manifest import RecordManifestBuilder
 from ckanext.iiif.logic import actions
