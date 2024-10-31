@@ -39,7 +39,7 @@ def build_iiif_resource(identifier: str) -> Optional[dict]:
     None is returned.
 
     :param identifier: the IIIF resource identifier
-    :return: a dict or None
+    :returns: a dict or None
     """
     for builder in BUILDERS.values():
         try:

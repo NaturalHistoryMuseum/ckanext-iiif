@@ -8,7 +8,7 @@ def create_id_url(identifier: str) -> str:
     Given the identifier of a IIIF resource, creates the full URL for it.
 
     :param identifier: the IIIF resource ID
-    :return: the full URL for the IIIF resource (e.g. a manifest)
+    :returns: the full URL for the IIIF resource (e.g. a manifest)
     """
     return toolkit.url_for('iiif.resource', identifier=identifier, _external=True)
 
@@ -22,7 +22,7 @@ def wrap_language(
 
     :param value: the value/values
     :param language: the language, defaults to 'none'
-    :return: the value in the right IIIF language format
+    :returns: the value in the right IIIF language format
     """
     if not isinstance(value, list):
         value = [value]
