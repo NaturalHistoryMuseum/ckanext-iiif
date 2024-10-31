@@ -1,6 +1,5 @@
-from typing import Optional
-
 import abc
+from typing import Optional
 
 
 class IIIFResourceBuilder(abc.ABC):
@@ -12,8 +11,7 @@ class IIIFResourceBuilder(abc.ABC):
     """
 
     @abc.abstractmethod
-    def match_and_build(self, identifier: str) -> Optional[dict]:
-        ...
+    def match_and_build(self, identifier: str) -> Optional[dict]: ...
 
     @abc.abstractmethod
     def build_identifier(self, **kwargs) -> str:

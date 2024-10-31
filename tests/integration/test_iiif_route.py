@@ -1,7 +1,7 @@
 import json
+from unittest.mock import MagicMock, call, patch
 
 import pytest
-from unittest.mock import patch, MagicMock, call
 
 
 @pytest.mark.ckan_config('ckan.plugins', 'iiif')

@@ -1,5 +1,6 @@
+from typing import Callable, Optional, OrderedDict
+
 from ckan.plugins import interfaces
-from typing import Optional, Callable, OrderedDict
 
 
 class IIIIF(interfaces.Interface):

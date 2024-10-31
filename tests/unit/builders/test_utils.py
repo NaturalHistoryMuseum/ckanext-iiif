@@ -1,5 +1,6 @@
-from ckanext.iiif.builders.utils import wrap_language
 from mock import MagicMock
+
+from ckanext.iiif.builders.utils import wrap_language
 
 
 def test_wrap_language():

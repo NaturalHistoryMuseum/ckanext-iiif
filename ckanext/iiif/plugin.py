@@ -1,11 +1,11 @@
-import ckan.plugins as plugins
 import logging
-from ckan.plugins import toolkit
-from ckantools.loaders import create_actions, create_auth
 from contextlib import suppress
 
-from . import interfaces
-from . import routes
+import ckan.plugins as plugins
+from ckan.plugins import toolkit
+from ckantools.loaders import create_actions, create_auth
+
+from . import interfaces, routes
 from .builders.manifest import RecordManifestBuilder
 from .logic import actions, auth
 
