@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from ckanext.iiif.logic.auth import build_iiif_resource, build_iiif_identifier
+from ckanext.iiif.logic.auth import build_iiif_identifier, build_iiif_resource
 
 
 class TestBuildIIIFResource:
