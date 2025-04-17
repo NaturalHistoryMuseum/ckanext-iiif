@@ -54,7 +54,7 @@ class IIIFPlugin(plugins.SingletonPlugin):
         """
         return routes.blueprints
 
-    def datastore_multisearch_modify_response(self, response):
+    def vds_after_multi_query(self, response, result):
         """
         IVersionedDatastore hook.
 
