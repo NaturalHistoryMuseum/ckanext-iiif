@@ -63,7 +63,7 @@ class IIIFPlugin(plugins.SingletonPlugin):
         resource_cache = {}
         resource_show = toolkit.get_action('resource_show')
 
-        for record in response['records']:
+        for record in result['records']:
             resource_id = record['resource']
             if resource_id not in resource_cache:
                 resource_cache[resource_id] = resource_show({}, {'id': resource_id})
@@ -71,5 +71,3 @@ class IIIFPlugin(plugins.SingletonPlugin):
                 record['iiif'] = RecordManifestBuilder.build_record_manifest(
                     resource_cache[resource_id], record['data']
                 )
-
-        return response
