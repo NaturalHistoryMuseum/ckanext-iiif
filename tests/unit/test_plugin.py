@@ -9,7 +9,7 @@ from ckanext.iiif.plugin import IIIFPlugin
 
 
 @pytest.mark.usefixtures('clean_db')
-class TestDatastoreMultisearchModifyResponse:
+class TestVDSAfterMultiQuery:
     def test_success(self):
         plugin = IIIFPlugin()
 
@@ -19,7 +19,7 @@ class TestDatastoreMultisearchModifyResponse:
         record_data_2 = MagicMock()
         record_data_3 = MagicMock()
 
-        response = {
+        result = {
             'records': [
                 {'resource': resource_1['id'], 'data': record_data_1},
                 {'resource': resource_1['id'], 'data': record_data_2},
@@ -34,9 +34,9 @@ class TestDatastoreMultisearchModifyResponse:
         with patch(
             'ckanext.iiif.plugin.RecordManifestBuilder', mock_record_manifest_builder
         ):
-            updated_response = plugin.datastore_multisearch_modify_response(response)
+            plugin.vds_after_multi_query(MagicMock(), result)
 
-        assert all(record['iiif'] == 'yes' for record in updated_response['records'])
+        assert all(record['iiif'] == 'yes' for record in result['records'])
         assert mock_record_manifest_builder.build_record_manifest.mock_calls == [
             call(resource_1, record_data_1),
             call(resource_1, record_data_2),
@@ -52,7 +52,7 @@ class TestDatastoreMultisearchModifyResponse:
         record_data_2 = MagicMock()
         record_data_3 = MagicMock()
 
-        response = {
+        result = {
             'records': [
                 {'resource': resource_1['id'], 'data': record_data_1},
                 {'resource': resource_1['id'], 'data': record_data_2},
@@ -68,9 +68,9 @@ class TestDatastoreMultisearchModifyResponse:
             'ckanext.iiif.plugin.RecordManifestBuilder',
             mock_record_manifest_builder,
         ):
-            updated_response = plugin.datastore_multisearch_modify_response(response)
+            plugin.vds_after_multi_query(MagicMock(), result)
 
-        assert all('iiif' not in record for record in updated_response['records'])
+        assert all('iiif' not in record for record in result['records'])
         assert mock_record_manifest_builder.build_record_manifest.mock_calls == [
             call(resource_1, record_data_1),
             call(resource_1, record_data_2),
@@ -90,7 +90,7 @@ class TestDatastoreMultisearchModifyResponse:
             'length': 15,
             'images': ['https://image.com/image.jpg'],
         }
-        response = {
+        result = {
             'records': [
                 {
                     'resource': resource_1['id'],
@@ -99,8 +99,8 @@ class TestDatastoreMultisearchModifyResponse:
             ]
         }
 
-        updated_response = plugin.datastore_multisearch_modify_response(response)
-        assert updated_response['records'][0][
+        plugin.vds_after_multi_query(MagicMock(), result)
+        assert result['records'][0][
             'iiif'
         ] == RecordManifestBuilder.build_record_manifest(resource_1, record_data)
 
