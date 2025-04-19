@@ -53,7 +53,7 @@ class RecordManifestBuilder(IIIFResourceBuilder):
             raise IIIFBuildError(identifier, f'Resource {resource_id} not found')
 
         try:
-            result = toolkit.get_action('record_show')(
+            result = toolkit.get_action('vds_data_get')(
                 {}, {'resource_id': resource_id, 'record_id': record_id}
             )
             # we're only going to use the data part
