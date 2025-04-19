@@ -319,17 +319,17 @@ class TestMatchAndBuildRecordManifest:
     def test_no_record(self):
         resource = factories.Resource()
 
-        # TODO: we shouldn't really be mocking the record_show action here but without
-        #       adding a dependency on ckanext-nhm where the record_show action is
-        #       defined, we're kinda stuck
-        record_show_mock = MagicMock(side_effect=NotFound('oh no!'))
+        # TODO: mocking the vds_data_get action here isn't ideal but without adding a
+        #       dependency on ckanext-versioned-datastore where the vds_data_get action
+        #       is defined, we're kinda stuck
+        vds_data_get_mock = MagicMock(side_effect=NotFound('oh no!'))
         original_get_action = toolkit.get_action
 
         def get_action(name):
-            # we only want to mock record_show, not resource_show, so we have to add
+            # we only want to mock vds_data_get, not resource_show, so we have to add
             # some logic here and the hack gets hackier because of it. Dang
-            if name == 'record_show':
-                return record_show_mock
+            if name == 'vds_data_get':
+                return vds_data_get_mock
             else:
                 return original_get_action(name)
 
@@ -342,7 +342,7 @@ class TestMatchAndBuildRecordManifest:
                 RecordManifestBuilder().match_and_build(
                     f'resource/{resource["id"]}/record/4'
                 )
-        record_show_mock.assert_called_once_with(
+        vds_data_get_mock.assert_called_once_with(
             {}, {'resource_id': resource['id'], 'record_id': '4'}
         )
 
