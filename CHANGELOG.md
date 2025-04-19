@@ -1,3 +1,21 @@
+## v4.0.0 (2025-04-19)
+
+### Breaking Changes
+
+- upgrade for compatibility with new vds version
+
+### Feature
+
+- upgrade for compatibility with new vds version
+
+### Fix
+
+- use correct parameter for IIIF modifications
+
+### Tests
+
+- fix the tests
+
 ## v3.0.12 (2024-11-04)
 
 ### Docs
