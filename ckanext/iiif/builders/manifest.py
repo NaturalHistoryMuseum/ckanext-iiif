@@ -29,8 +29,9 @@ class RecordManifestBuilder(IIIFResourceBuilder):
 
     def match_and_build(self, identifier: str) -> Optional[dict]:
         """
-        Build the manifest for the given resource id & record id identifier. If the
-        identifier does not match format required then None is returned, otherwise an
+        Build the manifest for the given resource id & record id identifier.
+
+        If the identifier does not match format required then None is returned, otherwise an
         attempt to build the manifest is made and any issues will result in raised
         exceptions.
 
@@ -110,8 +111,9 @@ class RecordManifestBuilder(IIIFResourceBuilder):
         resource: Union[dict, str], record: Union[dict, str, int]
     ) -> str:
         """
-        Builds the manifest ID from the given resource and record dicts or IDs. If this
-        ID is given to the build_iiif_resource action then the manifest for this
+        Builds the manifest ID from the given resource and record dicts or IDs.
+
+        If this ID is given to the build_iiif_resource action then the manifest for this
         resource and record combination should be returned.
 
         :param resource: the resource dict or resource ID
@@ -125,9 +127,10 @@ class RecordManifestBuilder(IIIFResourceBuilder):
     @staticmethod
     def _build_label(resource: dict, record: dict) -> Dict[str, List[str]]:
         """
-        Returns the label to use for the given resource and record. Currently, this uses
-        the 'title field' if specified on the resource. If the 'title field' isn't
-        available then the record ID is used.
+        Returns the label to use for the given resource and record.
+
+        Currently, this uses the 'title field' if specified on the resource. If the
+        'title field' isn't available then the record ID is used.
 
         :param resource: the resource dict
         :param record: the record dict
@@ -143,8 +146,9 @@ class RecordManifestBuilder(IIIFResourceBuilder):
     @staticmethod
     def _build_rights(resource: dict) -> str:
         """
-        Returns the rights to use in the given resource's manifest. If no license is
-        specified on the resource then cc-by is used as a default.
+        Returns the rights to use in the given resource's manifest.
+
+        If no license is specified on the resource then cc-by is used as a default.
 
         :param resource: the resource dict
         :returns: the license URL to use
