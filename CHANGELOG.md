@@ -1,3 +1,18 @@
+## v4.0.2 (2026-10-26)
+
+### Refactor
+
+- run pre-commit and refactor all files
+
+### CI System(s)
+
+- update pre-commit config
+- update action versions update the actions to the latest versions
+
+### Chores/Misc
+
+- update team names
+
 ## v4.0.1 (2025-06-09)
 
 ### Build System(s)
