@@ -40,8 +40,9 @@ class IIIFPlugin(plugins.SingletonPlugin):
 
     def configure(self, ckan_config):
         """
-        IConfigurable hook. Here, the builders from other plugins are added to the
-        BUILDERS list.
+        IConfigurable hook.
+
+        Here, the builders from other plugins are added to the BUILDERS list.
 
         :param ckan_config:
         """
