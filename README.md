@@ -151,19 +151,16 @@ from ckanext.iiif.interfaces import IIIIF
 
 
 class MyBuilder(IIIFResourceBuilder):
+    def match_and_build(self, identifier: str) -> Optional[dict]: ...
 
-    def match_and_build(self, identifier: str) -> Optional[dict]:
-        ...
-
-    def build_identifier(self, *args, **kwargs) -> str:
-        ...
+    def build_identifier(self, *args, **kwargs) -> str: ...
 
 
 class MyExtension(plugins.SingletonPlugin):
     plugins.implements(IIIIF)
 
     def register_iiif_builders(self, builders: OrderedDict[str, IIIFResourceBuilder]):
-        builders["my_builder"]: MyBuilder()
+        builders['my_builder']: MyBuilder()
 ```
 
 When a request is made to build a IIIF resource, each of the registered builders is
